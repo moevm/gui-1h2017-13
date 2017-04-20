@@ -10,7 +10,7 @@ class Board
     QList <Player* > players;
     bool piecesType; // false means simple(console) and true means graphic
 private:
-     Board(){};
+     Board(){}
      bool isPlayerIndexCorrect(const int &playerIndex);
      bool isOnBoard(Piece *p);
     //Factory methods

@@ -17,12 +17,17 @@ SOURCES += main.cpp\
     pieces.cpp \
     board.cpp \
     player.cpp \
-    controller.cpp
+    controller.cpp \
+    tile.cpp
 
 HEADERS  += mainwindow.h \
     pieces.h \
     board.h \
     player.h \
-    controller.h
+    controller.h \
+    tile.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    images.qrc

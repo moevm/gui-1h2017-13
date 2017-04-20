@@ -28,6 +28,9 @@ Board *Board::CreateSimpleBoard(bool boardType){
 
 Board *Board::CreateGraphicBoard(bool boardType)
 {
+    Board* b = new Board();
+    b->piecesType = boardType;
+    return b;
 }
 
 Board *Board::CreateBoard(bool isGraphic)

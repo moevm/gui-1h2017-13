@@ -65,7 +65,7 @@ King::~King()
 
 }
 
-King::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
+bool King::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
 {
     if(!isSamePosition(newPos) && abs(pos.x() - newPos.x()) <= 1 &&  abs(pos.y() - newPos.y()) <= 1)
         return true;
@@ -83,7 +83,7 @@ Queen::~Queen()
 
 }
 
-Queen::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
+bool Queen::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
 {
     int diffX = pos.x() -  newPos.x();
     int diffY = pos.y() - newPos.y();
@@ -115,7 +115,7 @@ Rook::~Rook()
 
 }
 
-Rook::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
+bool Rook::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
 {
     int diffX = pos.x() -  newPos.x();
     int diffY = pos.y() - newPos.y();
@@ -145,7 +145,7 @@ Bishop::~Bishop()
 
 }
 
-Bishop::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
+bool Bishop::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
 {
     int diffX = pos.x() -  newPos.x();
     int diffY = pos.y() - newPos.y();
@@ -175,7 +175,7 @@ Knight::~Knight()
 
 }
 
-Knight::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
+bool Knight::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
 {
     int diffX = pos.x() -  newPos.x();
     int diffY = pos.y() - newPos.y();
@@ -197,7 +197,7 @@ Pawn::~Pawn()
 
 }
 
-Pawn::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
+bool Pawn::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
 {
     int diffX = newPos.x() - pos.x();
     int diffY = newPos.y() - pos.y();

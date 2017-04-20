@@ -12,8 +12,8 @@ class Player : public QObject
     QList <Piece*> pieces;
 
 signals:
-    pieceChosen(QPoint pos);
-    moveGenerated(QPoint pos);
+   void pieceChosen(QPoint pos);
+   void moveGenerated(QPoint pos);
 
 private slots:
     void choosePiece(QPoint pos);
