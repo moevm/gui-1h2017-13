@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,16 +18,29 @@ SOURCES += main.cpp\
     board.cpp \
     player.cpp \
     controller.cpp \
-    tile.cpp
+    tile.cpp \
+    boardvision.cpp
 
 HEADERS  += mainwindow.h \
     pieces.h \
     board.h \
     player.h \
     controller.h \
-    tile.h
+    tile.h \
+    db.h \
+    boardvision.h
 
 FORMS    += mainwindow.ui
 
 RESOURCES += \
     images.qrc
+wince {
+    CONFIG(debug, debug|release):sqlPlugins.files = $$QT_BUILD_TREE/plugins/sqldrivers/*d4.dll
+    CONFIG(release, debug|release):sqlPlugins.files = $$QT_BUILD_TREE/plugins/sqldrivers/*[^d]4.dll
+    sqlPlugins.path = sqldrivers
+    INSTALLS += sqlPlugins
+}
+
+DISTFILES += \
+    ../build-Chess-Desktop_Qt_5_8_0_MinGW_32bit-Debug/chess.db
+
