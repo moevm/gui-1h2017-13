@@ -31,9 +31,9 @@ void accessories(QWidget *baseWidget)
 {
 
     QLabel *moves = new QLabel(baseWidget);
-    moves->setGeometry(1000,105,250,550);
+    moves->setGeometry(760,35,250,550);
     moves->setStyleSheet("QLabel {background-color: white;}");
-
+    moves->setText();
 }
 
 void chessBoard(QWidget *baseWidget, Tile *tile[8][8])
@@ -43,17 +43,17 @@ void chessBoard(QWidget *baseWidget, Tile *tile[8][8])
 
     //borderDisplay
     {
-    border[0]->outline(baseWidget,330,105,0);
-    border[1]->outline(baseWidget,330,637,0);
-    border[2]->outline(baseWidget,330,125,1);
-    border[2]->outline(baseWidget,862,125,1);
+    border[0]->outline(baseWidget,180,35,0);
+    border[1]->outline(baseWidget,180,567,0);
+    border[2]->outline(baseWidget,180,55,1);
+    border[2]->outline(baseWidget,712,55,1);
     }
 
     //Create 64 tiles (allocating memories to the objects of Tile class)
-    ver=125;
+    ver=55;
     for(i=0;i<8;i++)
     {
-        hor=350;
+        hor=200;
         for(j=0;j<8;j++)
         {
             tile[i][j] = new Tile(baseWidget);
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     QWidget *myWidget = new QWidget();
-    myWidget->setGeometry(0,0,1370,700);
+    myWidget->setGeometry(100,100,1070,600);
 
     accessories(myWidget);
     chessBoard(myWidget,tile);
