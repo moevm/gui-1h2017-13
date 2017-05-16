@@ -6,6 +6,7 @@
 class Controller : public QObject
 {
     Q_OBJECT
+    //enum PawnDirection {Down, Up};
 public:
     Controller();
     ~Controller();
@@ -26,7 +27,7 @@ public slots:
     void makeMove(const QPoint &from, const QPoint &to);
 
 signals:
-    void moveMade(QList <Player* > players);
+    void moveMade(QList <Player* > players, unsigned int currentPlayerIndex);
 };
 
 #endif // CONTROLLER_H

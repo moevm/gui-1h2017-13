@@ -14,7 +14,6 @@ public:
     {
         db= QSqlDatabase::addDatabase("QSQLITE");
         db.setDatabaseName(QDir::currentPath()+"/chess.db");
-
     }
     ~DB(){
         closeDB();

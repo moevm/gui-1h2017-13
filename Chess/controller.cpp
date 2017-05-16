@@ -151,7 +151,34 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
                     }
                     break;
                 case Piece::P:
-                    //Обработка хода пешек взад - вперед
+                    //Pawns movement processing
+
+                    /*if((abs(diffY) == 1 || abs(diffY) == 2) && diffX == 0){
+                     for(int i =0; i<pieces.length(); i++){
+                         int diffIntersectsX = pieces[i]->getPosition().x() -  newPos.x();
+                         int diffIntersectsY = pieces[i]->getPosition().y() -  newPos.y();
+                         if(diffIntersectsX == 0 && diffIntersectsY == 0 && pieces[i]->getType()==P)
+                             return false;
+                     }
+                     return true;
+                    } else{
+                        if(abs(diffY) == 1 && abs(diffX) == 1)
+                        {
+                             for(int i =0; i<pieces.length(); i++)
+                             {
+                                 int diffIntersectsX = pieces[i]->getPosition().x() -  newPos.x();
+                                 int diffIntersectsY = pieces[i]->getPosition().y() -  newPos.y();
+                                 if((diffIntersectsX == 0 && diffIntersectsY == 0) ||
+                                         (abs(diffIntersectsX) == 0 && abs(diffIntersectsY) == 1))
+                                     return true;
+                             }
+                       }
+                        return false;
+                    }
+                }
+                 return false;*/
+                    break;
+                default:
                     break;
                 }
 
@@ -171,7 +198,7 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
             }
             delete pieceToMoveCopy;
             delete pieceToEatCopy;
-            emit moveMade(board->getPlayers());
+            emit moveMade(board->getPlayers(), currPlayerIndex);
         }
         else{
             delete pieceToMove;
