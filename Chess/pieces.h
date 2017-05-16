@@ -86,5 +86,5 @@ class Empty : public Piece{
     ~Empty(){}
     bool MovePattern(QPoint newPos, const QList <Piece*> &pieces){return false;}
 };
-//
+
 #endif // PIECES_H

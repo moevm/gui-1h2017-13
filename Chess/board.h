@@ -33,5 +33,5 @@ private:
     // Empty graphic factory method
     static Board *CreateGraphicBoard(bool boardType);
 };
-//
+
 #endif // BOARD_H

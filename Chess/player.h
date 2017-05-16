@@ -4,25 +4,17 @@
 #include <pieces.h>
 #include <QObject>
 
-class Player : public QObject
+class Player
 {
-    Q_OBJECT
-
-    friend class Board;
     QList <Piece*> pieces;
 
-signals:
-   void pieceChosen(QPoint pos);
-   void moveGenerated(QPoint pos);
-
-private slots:
-    void choosePiece(QPoint pos);
-    void generateMove(QPoint pos);
-
 public:
+    QList <Piece*> getPieces();
+    bool addPiece(bool isGraphic, Piece::PieceType p, QPoint pos, Piece::PieceState state = Piece::NonMoved);
+    Piece* getPiece(QPoint pos);
+    bool deletePiece(QPoint pos);
     Player();
     ~Player();
-    Player(Player const& p);
 };
-//
+
 #endif // PLAYER_H

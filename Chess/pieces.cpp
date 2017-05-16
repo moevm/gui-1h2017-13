@@ -1,5 +1,5 @@
 #include "pieces.h"
-//
+
 Piece *Piece::CreateSimplePiece(PieceType type, QPoint pos, PieceState state)
 {
     switch(type){
@@ -109,10 +109,10 @@ bool King::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
             return true;
         else
         {
-            if(abs(diffX)==2 && diffY == 0)
+            if(abs(diffX)==2 && diffY == 0 && state == NonMoved)
             {
                 for(int i=0 ; i<pieces.length(); i++){
-                    if(pieces[i]->getType() == R && pieces[i]->MovePattern(pos,pieces))
+                    if(pieces[i]->getType() == R && pieces[i]->MovePattern(pos,pieces) && pieces[i]->getState()== NonMoved)
                     {
                         return true;
                     }

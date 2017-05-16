@@ -4,33 +4,35 @@ const QList <Piece *> Board::getPieces()
 {
     QList <Piece*> temp;
     for(int i=0; i<players.length(); i++){
-        temp.append(players[i]->pieces);
+        temp.append(players[i]->getPieces());
     }
     return temp;
 }
 
-bool Board::isPlayerIndexCorrect(const int &playerIndex)
+const QList<Player *> Board::getPlayers()
 {
-    return playerIndex > 0 && playerIndex < players.length();
+    return players;
 }
 
-bool Board::isOnBoard(Piece *p)
+bool Board::isPlayerIndexCorrect(const int &playerIndex)
 {
-    return  (1 <= p->getPosition().y() && p->getPosition().y() <= 8 &&
-             a <= p->getPosition().x() && p->getPosition().x() <= h);
+    return playerIndex >= 0 && playerIndex < players.length();
+}
+
+bool Board::isOnBoard(QPoint pos)
+{
+    return  (1 <= pos.y() && pos.y() <= 8 &&
+             a <= pos.x() && pos.x() <= h);
 }
 
 Board *Board::CreateSimpleBoard(bool boardType){
     Board* b  = new Board();
-    b->piecesType = boardType;
+    b->viewType = boardType;
     return b;
 }
 
 Board *Board::CreateGraphicBoard(bool boardType)
 {
-    Board* b = new Board();
-    b->piecesType = boardType;
-    return b;
 }
 
 Board *Board::CreateBoard(bool isGraphic)
@@ -38,12 +40,22 @@ Board *Board::CreateBoard(bool isGraphic)
     //if(isGraphic)
         //return CreateGraphicBoard(isGraphic);
     //else
-        return CreateSimpleBoard(isGraphic);
+    return CreateSimpleBoard(isGraphic);
 }
 
-void Board::addPlayer(const Player& p)
+bool Board::getViewType()
 {
-    players.append(new Player(p));
+    return viewType;
+}
+
+unsigned Board::getPlayersAmount()
+{
+    return players.length();
+}
+
+void Board::addPlayer()
+{
+    players.append(new Player());
 }
 
 bool Board::deletePlayer(const int &playerIndex)
@@ -51,38 +63,82 @@ bool Board::deletePlayer(const int &playerIndex)
     if(!isPlayerIndexCorrect(playerIndex)){
         return false;
     }
+    delete players[playerIndex];
     players.removeAt(playerIndex);
     return true;
 }
 
-bool Board::addPiece(Piece *p, const int &playerIndex)
+bool Board::addPlayerPiece(const int &playerIndex, Piece::PieceType p, QPoint pos, Piece::PieceState state)
 {
-    if(!isPlayerIndexCorrect(playerIndex) || !isOnBoard(p)){
+    if(!isPlayerIndexCorrect(playerIndex) || !isOnBoard(pos)){
         return false;
     }
     for(int i=0; i<players.length(); i++){
-        for(int j=0; j<players[i]->pieces.length(); j++){
-            if(players[i]->pieces[j]->getPosition() == p->getPosition()){
-                return false;
-            }
-        }
+       if(!players[i]->getPiece(pos)->isEmpty())
+               return false;
     }
-    players[playerIndex]->pieces.append(Piece::CreatePiece(piecesType, p->getType(), p->getPosition()));
+    players[playerIndex]->addPiece(viewType, p, pos, state);
     return true;
 }
 
-bool Board::deletePiece(const QPoint &pos)
+Piece* Board::getPlayerPiece(const int &playerIndex, const QPoint &pos)
+{
+    return players[playerIndex]->getPiece(pos);
+}
+
+bool Board::changePlayerPiecePosition(const int &playerIndex, const QPoint &from, const QPoint &to)
 {
     for(int i=0; i<players.length(); i++){
-        for(int j=0; j<players[i]->pieces.length(); j++){
-            if(players[i]->pieces[j]->getPosition() == pos){
-                players[i]->pieces.removeAt(j);
-                return true;
-            }
-        }
+       if(!players[i]->getPiece(to)->isEmpty())
+               return false;
+    }
+    Piece* p = getPlayerPiece(playerIndex, from);
+    if(!p->isEmpty() && from!=to && isOnBoard(to) && p->MovePattern(to,getPieces()))
+    {
+        p->setPosition(to);
+        p->setState(Piece::Moved);
+        return true;
     }
     return false;
 }
 
+bool Board::deletePlayerPiece(const int &playerIndex, const QPoint &pos)
+{
+    return players[playerIndex]->deletePiece(pos);
+}
 
+bool Board::isPlayerPieceUnderAttack(const int &playerIndex, const QPoint &pos)
+{
+    Piece* pieceUnderAttack = getPlayerPiece( playerIndex, pos);
+    QList <Piece * > enemyPieces;
+    for(int i=0; i<players.length(); i++){
+        if(i!=playerIndex){
+            enemyPieces.append(players[i]->getPieces());
+        }
+    }
+    return pieceUnderAttack->isUnderAttack(enemyPieces);
+}
+
+int Board::getPiecePlayerIndex(const QPoint &pos)
+{
+    for(int i=0; i<players.length(); i++){
+       if(!players[i]->getPiece(pos)->isEmpty())
+               return i;
+    }
+    return -1;
+}
+
+Piece *Board::createCopy(const QPoint &pos)
+{
+    Piece* temp = NULL;
+    for(int i=0; i<players.length(); i++){
+        delete temp;
+        temp = getPlayerPiece(i, pos);
+        if(!temp->isEmpty())
+        {
+            return Piece::CreatePiece(viewType, temp->getType(), temp->getPosition());
+        }
+    }
+    return temp;
+}
 

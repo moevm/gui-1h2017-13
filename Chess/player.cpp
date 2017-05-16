@@ -1,25 +1,46 @@
 #include "player.h"
 
-void Player::choosePiece(QPoint pos)
+QList<Piece *> Player::getPieces()
 {
-    emit pieceChosen(pos);
+    return pieces;
 }
 
-void Player::generateMove(QPoint pos)
+Piece *Player::getPiece(QPoint pos)
 {
-    emit moveGenerated(pos);
+    for(int i=0; i<pieces.length(); i++){
+        if(pieces[i]->getPosition()==pos){
+            return pieces[i];
+        }
+    }
+    return new Empty();
+}
+
+bool Player::addPiece(bool isGraphic, Piece::PieceType p, QPoint pos, Piece::PieceState state)
+{
+    for(int i = 0; i<pieces.length(); i++){
+        if(pieces[i]->getPosition()==pos){
+            return false;
+        }
+    }
+    pieces.append(Piece::CreatePiece(isGraphic, p, pos, state));
+    return true;
+}
+
+bool Player::deletePiece(QPoint pos)
+{
+    for(int i=0; i<pieces.length(); i++){
+        if(pieces[i]->getPosition()==pos)
+            delete pieces[i];
+            pieces.removeAt(i);
+            return true;
+    }
+    return false;
 }
 
 Player::Player()
 {
 
 }
-
-Player::Player(const Player &p)
-{
-    pieces = p.pieces;
-}
-//
 
 Player::~Player()
 {

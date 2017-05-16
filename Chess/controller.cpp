@@ -55,8 +55,8 @@ void Controller::moveBackTransmission()
 
 void Controller::createWhitePlayer()
 {
-    int playerIndex = board->getPlayersAmount() - 1;
     board->addPlayer();
+    int playerIndex = board->getPlayersAmount() - 1;
     //king
     board->addPlayerPiece(playerIndex, Piece::K, QPoint(Board::e,1));
     kings.append(board->getPlayerPiece(playerIndex, QPoint(Board::e,1)));
@@ -79,8 +79,8 @@ void Controller::createWhitePlayer()
 
 void Controller::createBlackPlayer()
 {
-    int playerIndex = board->getPlayersAmount() - 1;
     board->addPlayer();
+    int playerIndex = board->getPlayersAmount() - 1;
     //king
     board->addPlayerPiece(playerIndex, Piece::K, QPoint(Board::e,8));
     kings.append(board->getPlayerPiece(playerIndex, QPoint(Board::e,8)));
@@ -106,20 +106,18 @@ void Controller::createBlackPlayer()
 //Добавить превращение пешки в фигуру после прохождения доски
 //Обозначить ситуацию el passant и ограничить движение пешек взад-вперед
 //Реализовать механизм рокировки
-//
-void Controller::makeMove( QPoint from,  QPoint to)
+void Controller::makeMove(const QPoint &from, const QPoint& to)
 {
     if(board!=NULL)
     {
         Piece* copy = board->createCopy(to);
         int copyPlayerIndex = board->getPiecePlayerIndex(to);
-        //if(!eatenPiece->isEmpty())
-        //{
-            //eatenPiece = Piece::CreatePiece(board->getViewType(),eatenPiece->getType(),eatenPiece->getPosition());
+        if(!copy->isEmpty())
+        {
             board->deletePlayerPiece(copyPlayerIndex, to);
-        //}
+        }
             //int KingXcoord = kings[currPlayerIndex]->getPosition().x();
-        if(board->changePlayerPiecePosition(currPlayerIndex, from, to)){
+        if(board->changePlayerPiecePosition(currPlayerIndex, from, to)){ //move
             QPoint kingPosition = kings[currPlayerIndex]->getPosition();
             int prevPlayerIndex = currPlayerIndex;
             moveTransmission();
@@ -132,8 +130,7 @@ void Controller::makeMove( QPoint from,  QPoint to)
                 }
             }
         }
-        //qDebug()<<board->getPlayers();
-       // emit moveMade(board->getPlayers());
+        emit moveMade(board->getPlayers());
     }
     else{
         qWarning("Game is not initialized!");

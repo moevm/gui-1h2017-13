@@ -2,7 +2,7 @@
 #define CONTROLLER_H
 #include "board.h"
 #include <QObject>
-#include <QDebug>
+
 class Controller : public QObject
 {
     Q_OBJECT
@@ -23,10 +23,10 @@ private:
     void createBlackPlayer();
 
 public slots:
-    void makeMove(QPoint from, QPoint to);
+    void makeMove(const QPoint &from, const QPoint &to);
 
 signals:
     void moveMade(QList <Player* > players);
 };
-//
+
 #endif // CONTROLLER_H
