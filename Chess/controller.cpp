@@ -1,5 +1,5 @@
 #include "controller.h"
-#include <QDebug>
+
 Controller::Controller()
 {
 }
@@ -103,35 +103,79 @@ void Controller::createBlackPlayer()
 
 //Добавить проверку шаха/мата! сделано, не тестировалось
 //Добавить удаление при сьедении фигуры! сделано, не тестировалось
+//Реализовать механизм рокировки сделано, не тестировалось
+//Ограничить движение пешки только вперед для каждого из игроков
 //Добавить превращение пешки в фигуру после прохождения доски
-//Обозначить ситуацию el passant и ограничить движение пешек взад-вперед
-//Реализовать механизм рокировки
+//Обозначить ситуацию el passant
 void Controller::makeMove(const QPoint &from, const QPoint& to)
 {
     if(board!=NULL)
     {
-        Piece* copy = board->createCopy(to);
-        int copyPlayerIndex = board->getPiecePlayerIndex(to);
-        if(!copy->isEmpty())
-        {
-            board->deletePlayerPiece(copyPlayerIndex, to);
-        }
-            //int KingXcoord = kings[currPlayerIndex]->getPosition().x();
-        if(board->changePlayerPiecePosition(currPlayerIndex, from, to)){ //move
-            QPoint kingPosition = kings[currPlayerIndex]->getPosition();
-            int prevPlayerIndex = currPlayerIndex;
-            moveTransmission();
-            if(board->isPlayerPieceUnderAttack(prevPlayerIndex, kingPosition)){ //check condition
-                moveBackTransmission();
-                if(!copy->isEmpty())
+        Piece* pieceToMove = board->getPlayerPiece(currPlayerIndex, from);
+        if(!pieceToMove->isEmpty()){ // "empty" clicks block
+            Piece* pieceToMoveCopy = board->createCopy(from);
+            Piece* pieceToEatCopy = board->createCopy(to);
+            unsigned int pieceToEatCopyPlayerIndex = board->getPiecePlayerIndex(to);
+            if(!pieceToEatCopy->isEmpty() && pieceToEatCopyPlayerIndex != currPlayerIndex && from!=to)
+            {
+                board->deletePlayerPiece(pieceToEatCopyPlayerIndex, to);
+            }
+            //QPoint kingPrevPosition = kings[currPlayerIndex]->getPosition();
+
+            if(board->changePlayerPiecePosition(currPlayerIndex, from, to)){ //move
+                QPoint kingPosition = kings[currPlayerIndex]->getPosition();
+                int prevPlayerIndex = currPlayerIndex;
+                moveTransmission();
+
+                switch(pieceToMoveCopy->getType())
                 {
-                    board->addPlayerPiece(copyPlayerIndex, copy->getType(), copy->getPosition());
-                    delete copy;
+                case Piece::K:
+                    // casteling condition
+                    if(pieceToMoveCopy->getPosition().x() - pieceToMove->getPosition().x() == 2)// left casteling
+                    {
+                        Piece* kingCopy = board->createCopy(to);
+                        board->deletePlayerPiece(prevPlayerIndex, to);
+                        board->changePlayerPiecePosition(prevPlayerIndex, QPoint(Board::a, kingCopy->getPosition().y()), QPoint(kingCopy->getPosition().x()+1,kingCopy->getPosition().y()));
+                        board->addPlayerPiece(prevPlayerIndex, kingCopy->getType(), kingCopy->getPosition(), kingCopy->getState());
+                        kings[prevPlayerIndex] = board->getPlayerPiece(prevPlayerIndex, to);
+                        delete kingCopy;
+                    }
+                    else if(pieceToMoveCopy->getPosition().x() - pieceToMove->getPosition().x() == -2)// right casteling
+                    {
+                        Piece* kingCopy = board->createCopy(to);
+                        board->deletePlayerPiece(prevPlayerIndex, to);
+                        board->changePlayerPiecePosition(prevPlayerIndex, QPoint(Board::h, kingCopy->getPosition().y()), QPoint(kingCopy->getPosition().x()-1,kingCopy->getPosition().y()));
+                        board->addPlayerPiece(prevPlayerIndex, kingCopy->getType(), kingCopy->getPosition(), kingCopy->getState());
+                        kings[prevPlayerIndex] = board->getPlayerPiece(prevPlayerIndex, to);
+                        delete kingCopy;
+                    }
+                    break;
+                case Piece::P:
+                    //Обработка хода пешек взад - вперед
+                    break;
+                }
+
+                if(board->isPlayerPieceUnderAttack(prevPlayerIndex, kingPosition)){ //check condition
+                    moveBackTransmission();
+                    board->changePlayerPiecePosition(currPlayerIndex, to, from);
+                    if(!pieceToEatCopy->isEmpty())
+                    {
+                        board->addPlayerPiece(pieceToEatCopyPlayerIndex, pieceToEatCopy->getType(), pieceToEatCopy->getPosition(), pieceToEatCopy->getState());
+                        delete pieceToEatCopy;
+                    }
                 }
             }
+            else
+            {
+                board->addPlayerPiece(pieceToEatCopyPlayerIndex, pieceToEatCopy->getType(), pieceToEatCopy->getPosition(), pieceToEatCopy->getState());
+            }
+            delete pieceToMoveCopy;
+            delete pieceToEatCopy;
+            emit moveMade(board->getPlayers());
         }
-        qDebug() << board->getPlayers();
-        emit moveMade(board->getPlayers());
+        else{
+            delete pieceToMove;
+        }
     }
     else{
         qWarning("Game is not initialized!");

@@ -29,10 +29,11 @@ bool Player::addPiece(bool isGraphic, Piece::PieceType p, QPoint pos, Piece::Pie
 bool Player::deletePiece(QPoint pos)
 {
     for(int i=0; i<pieces.length(); i++){
-        if(pieces[i]->getPosition()==pos)
+        if(pieces[i]->getPosition()==pos){
             delete pieces[i];
             pieces.removeAt(i);
             return true;
+        }
     }
     return false;
 }

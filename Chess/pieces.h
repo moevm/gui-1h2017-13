@@ -17,7 +17,7 @@ public:
     PieceState getState();
     PieceType getType();
     bool isEmpty();
-    bool isUnderAttack(const QList <Piece*> &pieces);
+    bool isUnderAttack(const QList <Piece*> &attackingPieces, const QList<Piece *> &allPieces);
     virtual bool MovePattern(QPoint newPos, const QList <Piece*> &pieces) = 0;
 private:
     //Factory methods

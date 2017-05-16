@@ -39,11 +39,11 @@ BoardVision::BoardVision(QWidget *widget)
     {
         tile[1][j]->piece=1;
         tile[1][j]->pieceColor=1;
-        tile[1][j]->display(Piece::PieceType::P);
+        tile[1][j]->display(Piece::P);
          //w pawns
         tile[6][j]->piece=1;
         tile[6][j]->pieceColor=0;
-        tile[6][j]->display(Piece::PieceType::P);
+        tile[6][j]->display(Piece::P);
     }
     //white and black remaining elements
     for(j=0;j<8;j++)
@@ -54,25 +54,25 @@ BoardVision::BoardVision(QWidget *widget)
         tile[7][j]->pieceColor=0;
     }
     {
-    tile[0][0]->display(Piece::PieceType::R);
-    tile[0][1]->display(Piece::PieceType::N);
-    tile[0][2]->display(Piece::PieceType::B);
-    tile[0][3]->display(Piece::PieceType::Q);
-    tile[0][4]->display(Piece::PieceType::K);
-    tile[0][5]->display(Piece::PieceType::B);
-    tile[0][6]->display(Piece::PieceType::N);
-    tile[0][7]->display(Piece::PieceType::R);
+    tile[0][0]->display(Piece::R);
+    tile[0][1]->display(Piece::N);
+    tile[0][2]->display(Piece::B);
+    tile[0][3]->display(Piece::Q);
+    tile[0][4]->display(Piece::K);
+    tile[0][5]->display(Piece::B);
+    tile[0][6]->display(Piece::N);
+    tile[0][7]->display(Piece::R);
     }
 
     {
-    tile[7][0]->display(Piece::PieceType::R);
-    tile[7][1]->display(Piece::PieceType::N);
-    tile[7][2]->display(Piece::PieceType::B);
-    tile[7][3]->display(Piece::PieceType::Q);
-    tile[7][4]->display(Piece::PieceType::K);
-    tile[7][5]->display(Piece::PieceType::B);
-    tile[7][6]->display(Piece::PieceType::N);
-    tile[7][7]->display(Piece::PieceType::R);
+    tile[7][0]->display(Piece::R);
+    tile[7][1]->display(Piece::N);
+    tile[7][2]->display(Piece::B);
+    tile[7][3]->display(Piece::Q);
+    tile[7][4]->display(Piece::K);
+    tile[7][5]->display(Piece::B);
+    tile[7][6]->display(Piece::N);
+    tile[7][7]->display(Piece::R);
     }
     Controller *c = new Controller();
     c->initializeGame(false);
@@ -106,13 +106,13 @@ void BoardVision::setupedMove(QList<Player*> pl){
         }
      }
     for (int i=0; i<pl[0]->getPieces().length();i++){
-        qDebug() <<pl[0]->getPieces()[i]->getPosition();
+        //qDebug() <<pl[0]->getPieces()[i]->getPosition();
     tile[pl[0]->getPieces()[i]->getPosition().y()-1][pl[0]->getPieces()[i]->getPosition().x()-1]->pieceColor=true;
     tile[pl[0]->getPieces()[i]->getPosition().y()-1][pl[0]->getPieces()[i]->getPosition().x()-1]->piece=1;
     tile[pl[0]->getPieces()[i]->getPosition().y()-1][pl[0]->getPieces()[i]->getPosition().x()-1]->display(pl[0]->getPieces()[i]->getType());
     }
     for (int i=0; i<pl[1]->getPieces().length();i++){
-        qDebug() <<pl[1]->getPieces()[i]->getPosition();
+        //qDebug() <<pl[1]->getPieces()[i]->getPosition();
     tile[pl[1]->getPieces()[i]->getPosition().y()-1][pl[1]->getPieces()[i]->getPosition().x()-1]->pieceColor=false;
     tile[pl[1]->getPieces()[i]->getPosition().y()-1][pl[1]->getPieces()[i]->getPosition().x()-1]->piece=1;
     tile[pl[1]->getPieces()[i]->getPosition().y()-1][pl[1]->getPieces()[i]->getPosition().x()-1]->display(pl[1]->getPieces()[i]->getType());
@@ -158,6 +158,6 @@ void BoardVision::moveList()
     //moves->selectRow(3);
 }
 void BoardVision::onListClicked(QListWidgetItem *item){
-    qDebug() <<item->text();
+    //qDebug() <<item->text();
     table=item->text();
 }

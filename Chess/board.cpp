@@ -116,7 +116,7 @@ bool Board::isPlayerPieceUnderAttack(const int &playerIndex, const QPoint &pos)
             enemyPieces.append(players[i]->getPieces());
         }
     }
-    return pieceUnderAttack->isUnderAttack(enemyPieces);
+    return pieceUnderAttack->isUnderAttack(enemyPieces, getPieces());
 }
 
 int Board::getPiecePlayerIndex(const QPoint &pos)
@@ -136,7 +136,7 @@ Piece *Board::createCopy(const QPoint &pos)
         temp = getPlayerPiece(i, pos);
         if(!temp->isEmpty())
         {
-            return Piece::CreatePiece(viewType, temp->getType(), temp->getPosition());
+            return Piece::CreatePiece(viewType, temp->getType(), temp->getPosition(), temp->getState());
         }
     }
     return temp;

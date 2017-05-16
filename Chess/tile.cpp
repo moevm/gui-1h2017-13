@@ -13,17 +13,17 @@ void Tile::display(Piece::PieceType elem)
     {
         switch(elem)
         {
-            case Piece::PieceType::P: this->setPixmap(QPixmap(":/Images/pawn_white.svg"));
+            case Piece::P: this->setPixmap(QPixmap(":/Images/pawn_white.svg"));
                       break;
-            case Piece::PieceType::R: this->setPixmap(QPixmap(":/Images/rook_white.svg"));
+            case Piece::R: this->setPixmap(QPixmap(":/Images/rook_white.svg"));
                       break;
-            case Piece::PieceType::N: this->setPixmap(QPixmap(":/Images/knight_white.svg"));
+            case Piece::N: this->setPixmap(QPixmap(":/Images/knight_white.svg"));
                       break;
-            case Piece::PieceType::K: this->setPixmap(QPixmap(":/Images/king_white.svg"));
+            case Piece::K: this->setPixmap(QPixmap(":/Images/king_white.svg"));
                       break;
-            case Piece::PieceType::Q: this->setPixmap(QPixmap(":/Images/queen_white.svg"));
+            case Piece::Q: this->setPixmap(QPixmap(":/Images/queen_white.svg"));
                       break;
-            case Piece::PieceType::B: this->setPixmap(QPixmap(":/Images/bishop_white.svg"));
+            case Piece::B: this->setPixmap(QPixmap(":/Images/bishop_white.svg"));
                       break;
         }
     }
@@ -32,17 +32,17 @@ void Tile::display(Piece::PieceType elem)
     {
         switch(elem)
         {
-        case Piece::PieceType::P: this->setPixmap(QPixmap(":/Images/pawn_black.svg"));
+        case Piece::P: this->setPixmap(QPixmap(":/Images/pawn_black.svg"));
                   break;
-        case Piece::PieceType::R: this->setPixmap(QPixmap(":/Images/rook_black.svg"));
+        case Piece::R: this->setPixmap(QPixmap(":/Images/rook_black.svg"));
                   break;
-        case Piece::PieceType::N: this->setPixmap(QPixmap(":/Images/knight_black.svg"));
+        case Piece::N: this->setPixmap(QPixmap(":/Images/knight_black.svg"));
                   break;
-        case Piece::PieceType::K: this->setPixmap(QPixmap(":/Images/king_black.svg"));
+        case Piece::K: this->setPixmap(QPixmap(":/Images/king_black.svg"));
                   break;
-        case Piece::PieceType::Q: this->setPixmap(QPixmap(":/Images/queen_black.svg"));
+        case Piece::Q: this->setPixmap(QPixmap(":/Images/queen_black.svg"));
                   break;
-        case Piece::PieceType::B: this->setPixmap(QPixmap(":/Images/bishop_black.svg"));
+        case Piece::B: this->setPixmap(QPixmap(":/Images/bishop_black.svg"));
                   break;
         }
     }

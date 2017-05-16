@@ -42,10 +42,10 @@ bool Piece::isSamePosition(QPoint pos){
     return Piece::pos == pos;
 }
 
-bool Piece::isUnderAttack(const QList<Piece *> &pieces)
+bool Piece::isUnderAttack(const QList<Piece*> &attackingPieces, const QList<Piece*> &allPieces)
 {
-    for(int i = 0; i<pieces.length(); i++){
-        if(pieces[i]->MovePattern(pos,pieces)){
+    for(int i = 0; i<attackingPieces.length(); i++){
+        if(attackingPieces[i]->MovePattern(pos,allPieces)){
             return true;
         }
     }
@@ -254,11 +254,17 @@ bool Pawn::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
     int diffY = newPos.y() - pos.y();
     if (!isSamePosition(newPos))
     {
-       if((abs(diffY) == 1 || abs(diffY) == 2) && diffX == 0){
+       if(((abs(diffY) == 1 || abs(diffY) == 2) && diffX == 0) || (abs(diffY) == 1 && abs(diffX) == 1))
+           return true;
+       else
+           return false;
+    }
+
+       /*if((abs(diffY) == 1 || abs(diffY) == 2) && diffX == 0){
         for(int i =0; i<pieces.length(); i++){
             int diffIntersectsX = pieces[i]->getPosition().x() -  newPos.x();
             int diffIntersectsY = pieces[i]->getPosition().y() -  newPos.y();
-            if(diffIntersectsX == 0 && diffIntersectsY == 0)
+            if(diffIntersectsX == 0 && diffIntersectsY == 0 && pieces[i]->getType()==P)
                 return false;
         }
         return true;
@@ -270,12 +276,12 @@ bool Pawn::MovePattern(QPoint newPos, const QList <Piece*> &pieces)
                     int diffIntersectsX = pieces[i]->getPosition().x() -  newPos.x();
                     int diffIntersectsY = pieces[i]->getPosition().y() -  newPos.y();
                     if((diffIntersectsX == 0 && diffIntersectsY == 0) ||
-                            (abs(diffIntersectsX) == 0 && abs(diffIntersectsY) == 1 && pieces[i]->getType()==P))
+                            (abs(diffIntersectsX) == 0 && abs(diffIntersectsY) == 1))
                         return true;
                 }
           }
            return false;
        }
    }
-    return false;
+    return false;*/
 }
