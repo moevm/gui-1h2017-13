@@ -24,5 +24,5 @@ public:
     ~Player();
     Player(Player const& p);
 };
-
+//
 #endif // PLAYER_H

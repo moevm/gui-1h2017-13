@@ -21,6 +21,7 @@ SOURCES += main.cpp\
     tile.cpp \
     boardvision.cpp
 
+
 HEADERS  += mainwindow.h \
     pieces.h \
     board.h \

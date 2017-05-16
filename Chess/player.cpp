@@ -19,7 +19,7 @@ Player::Player(const Player &p)
 {
     pieces = p.pieces;
 }
-
+//
 
 Player::~Player()
 {

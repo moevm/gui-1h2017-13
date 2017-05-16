@@ -5,10 +5,12 @@
 
 class Tile: public QLabel
 {
+     Q_OBJECT
 public:
 
     //Fields
     int tileColor,piece,pieceColor,row,col,tileNum;
+    bool checked=false;
     char pieceName;
 
     //Constructors
@@ -18,6 +20,17 @@ public:
     //Methods
     void display(char elem);
     void tileDisplay();
-};
+    void mousePressEvent(QMouseEvent* event) {
+           emit clicked(QPoint(row+1,col+1));
+        }
+signals:
+    void clicked(QPoint p);
+public slots:
+    void slotClicked()
+{
+    qDebug()<<row << col;
+}
 
+};
+//
 #endif // TILE_H

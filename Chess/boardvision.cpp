@@ -28,6 +28,7 @@ BoardVision::BoardVision(QWidget *widget)
             tile[i][j]->tileNum=k++;
             tile[i][j]->tileDisplay();
             tile[i][j]->setGeometry(hor,ver,64,64);
+            connect(tile[i][j],SIGNAL( clicked(QPoint) ), this, SLOT( tileClicked(QPoint) ) );
             hor+=64;
         }
         ver+=64;
@@ -44,7 +45,6 @@ BoardVision::BoardVision(QWidget *widget)
         tile[6][j]->pieceColor=1;
         tile[6][j]->display('P');
     }
-
     //white and black remaining elements
     for(j=0;j<8;j++)
     {
@@ -53,7 +53,6 @@ BoardVision::BoardVision(QWidget *widget)
         tile[7][j]->piece=1;
         tile[7][j]->pieceColor=1;
     }
-
     {
     tile[0][0]->display('R');
     tile[0][1]->display('H');
@@ -65,7 +64,6 @@ BoardVision::BoardVision(QWidget *widget)
     tile[0][7]->display('R');
     }
 
-
     {
     tile[7][0]->display('R');
     tile[7][1]->display('H');
@@ -76,13 +74,9 @@ BoardVision::BoardVision(QWidget *widget)
     tile[7][6]->display('H');
     tile[7][7]->display('R');
     }
-
-    wR=7;
-    wC=4;
-
-    bR=0;
-    bC=4;
-
+    Controller *c = new Controller();
+    c->initializeGame(false);
+    connect(this,SIGNAL(wantMove(QPoint,QPoint)),c,SLOT(makeMove(QPoint,QPoint)) );
 }
 void BoardVision::downloadButton(){
     QListWidget *listWgt = new QListWidget(baseWidget);
@@ -101,6 +95,19 @@ void BoardVision::downloadButton(){
     db->closeDB();
 }
 
+void BoardVision::tileClicked(QPoint p)
+{
+    tile[p.x()-1][p.y()-1]->checked=true;
+    qDebug()<<p.x()-1 <<p.y()-1 <<tile[p.x()-1][p.y()-1]->checked;
+    count++;
+    fromto <<p;
+    if(count==2){
+        count=0;
+        emit wantMove(fromto[0],fromto[1]);
+        fromto.clear();
+    }
+
+}
 
 void BoardVision::moveList()
 {
@@ -121,10 +128,10 @@ void BoardVision::moveList()
         newItem = new QTableWidgetItem(db->intToChar(p[1].x())+QString::number(p[1].y()),QTableWidgetItem::Type);
         moves->setItem(row, 1, newItem);
     }
-    moves->selectRow(0);
+   // moves->selectRow(0);
     db->closeDB();
     moves->show();
-    moves->selectRow(3);
+    //moves->selectRow(3);
 }
 void BoardVision::onListClicked(QListWidgetItem *item){
     qDebug() <<item->text();

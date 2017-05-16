@@ -5,12 +5,13 @@
 #include <QListWidget>
 #include <QPushButton>
 #include <QTableWidget>
+#include <controller.h>
 
 class BoardVision : public QObject
 {
     Q_OBJECT
     int count=0,turn=1,max=0;
-    int wR,wC,bR,bC;
+    QVector<QPoint> fromto;
     Tile *click1;
 
     Tile *tile[8][8] = { { NULL } };
@@ -36,9 +37,12 @@ public:
     };
     BoardVision(QWidget *widget);
     void downloadButton();
+    signals:
+    void wantMove(QPoint from,QPoint to);
 private slots:
     void onListClicked(QListWidgetItem* item );
     void moveList();
+    void tileClicked(QPoint p);
 };
 
 #endif // BOARDVISION_H

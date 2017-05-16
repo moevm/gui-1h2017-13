@@ -3,27 +3,35 @@
 
 #include <player.h>
 
-enum l_letters {a = 1, b, c, d, e, f, g, h};
-
 class Board
 {
-    QList <Player* > players;
-    bool piecesType; // false means simple(console) and true means graphic
+public:
+    enum l_letters {a = 1, b, c, d, e, f, g, h};
+    static Board* CreateBoard(bool isGraphic);
+    bool getViewType();
+    unsigned getPlayersAmount();
+
+    const QList <Piece*> getPieces();
+    const QList <Player* > getPlayers();
+    void addPlayer();
+    bool deletePlayer(const int &playerIndex);
+    bool addPlayerPiece(const int &playerIndex, Piece::PieceType p, QPoint pos, Piece::PieceState state = Piece::NonMoved);
+    Piece* getPlayerPiece(const int &playerIndex, const QPoint &pos);
+    bool changePlayerPiecePosition(const int &playerIndex, const QPoint &from, const QPoint &to);
+    bool deletePlayerPiece(const int &playerIndex, const QPoint &pos);
+    bool isPlayerPieceUnderAttack(const int &playerIndex, const QPoint &pos);
+    int getPiecePlayerIndex(const QPoint &pos);
+    Piece* createCopy(const QPoint &pos); //creates copy of board piece which not connected with board
 private:
-     Board(){}
-     bool isPlayerIndexCorrect(const int &playerIndex);
-     bool isOnBoard(Piece *p);
+    QList <Player* > players;
+    bool viewType; // false means simple(console) and true means graphic
+    Board(){}
+    bool isPlayerIndexCorrect(const int &playerIndex);
+    bool isOnBoard(QPoint pos);
     //Factory methods
     static Board *CreateSimpleBoard(bool boardType);
     // Empty graphic factory method
     static Board *CreateGraphicBoard(bool boardType);
-public:
-    static Board* CreateBoard(bool isGraphic);
-    const QList <Piece*> getPieces();
-    void addPlayer(const Player &p);
-    bool deletePlayer(const int &playerIndex);
-    bool addPiece(Piece *p, const int &playerIndex);
-    bool deletePiece(const QPoint &pos);
 };
-
+//
 #endif // BOARD_H

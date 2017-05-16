@@ -57,4 +57,9 @@ void Tile::tileDisplay()
         this->setStyleSheet("QLabel {background-color: rgb(120, 120, 90);}:hover{background-color: rgb(170,85,127);}");
     else
         this->setStyleSheet("QLabel {background-color: rgb(211, 211, 158);}:hover{background-color: rgb(170,95,127);}");
+    if(this->checked && this->tileColor)
+        this->setStyleSheet("QLabel {background-color: rgb(170,85,127);}");
+    else if(this->checked)
+        this->setStyleSheet("QLabel {background-color: rgb(170,95,127);}");
+    //connect(this,SIGNAL( clicked(QPoint*) ), this, SLOT( slotClicked() ) );
 }
