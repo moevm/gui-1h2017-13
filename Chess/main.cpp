@@ -11,10 +11,14 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     QWidget *myWidget = new QWidget();
     myWidget->setGeometry(100,100,1070,700);
+   // DB *db = new DB();
+   // db->openDB();
     BoardVision *bv = new BoardVision(myWidget);
+    bv->initBoard();
     bv->buttons();
     myWidget->show();
     return a.exec();
+    //db->closeDB();
 }
 
 

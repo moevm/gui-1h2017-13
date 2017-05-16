@@ -25,7 +25,7 @@ public:
         QSqlQuery q;
         bool ok = db.open();
         //qDebug() <<db.tables();
-        qDebug() <<q.lastError().text();
+        //qDebug() <<q.lastError().text();
         return ok;
     }
     void closeDB(){
@@ -139,16 +139,18 @@ public:
         }
         return moves;
     }
-    QString readMovesS(const QString &name)
+    QStringList readMovesS(const QString &name)
     {
         QPoint* moves = new QPoint[2];
-        QString s="";
+        QString s="";  
+        QStringList sl;
         for(int i=0; i<recordCount(name); i++)
         {
             moves=readMove(name,i);
-            QTextStream(&s)<<intToChar(moves[0].x())<<'-'<<moves[0].y()<<" -> "<<intToChar(moves[1].x())<<'-'<<moves[1].y()<<'\n';
+            sl<<QString::number(moves[0].x())<<QString::number(moves[0].y())<<QString::number(moves[1].x())<<QString::number(moves[1].y());
+            //QTextStream(&s)<<intToChar(moves[0].x())<<'-'<<moves[0].y()<<" -> "<<intToChar(moves[1].x())<<'-'<<moves[1].y()<<'\n';
         }
-        return s;
+        return sl;
     }
     QString searchDebute(QPoint deb[])
     {
