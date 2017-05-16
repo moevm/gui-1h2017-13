@@ -1,5 +1,5 @@
 #include "controller.h"
-
+#include <QDebug>
 Controller::Controller()
 {
 }
@@ -130,6 +130,7 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
                 }
             }
         }
+        qDebug() << board->getPlayers();
         emit moveMade(board->getPlayers());
     }
     else{

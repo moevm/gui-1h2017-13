@@ -2,26 +2,25 @@
 #define TILE_H
 #include <QLabel>
 #include <QDebug>
-
+#include "pieces.h"
 class Tile: public QLabel
 {
      Q_OBJECT
 public:
-
     //Fields
-    int tileColor,piece,pieceColor,row,col,tileNum;
-    bool checked=false;
-    char pieceName;
+    int tileColor,piece,row,col,tileNum;
+    bool checked=false,pieceColor;
+    Piece::PieceType pieceName;
 
     //Constructors
     Tile(QWidget* pParent=0, Qt::WindowFlags f=0) : QLabel(pParent, f) {}
     Tile(const QString& text, QWidget* pParent = 0, Qt::WindowFlags f = 0) : QLabel(text, pParent, f){}
 
     //Methods
-    void display(char elem);
+    void display(Piece::PieceType elem);
     void tileDisplay();
     void mousePressEvent(QMouseEvent* event) {
-           emit clicked(QPoint(row+1,col+1));
+           emit clicked(QPoint(col,row));
         }
 signals:
     void clicked(QPoint p);

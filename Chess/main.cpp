@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     QWidget *myWidget = new QWidget();
     myWidget->setGeometry(100,100,1070,700);
     BoardVision *bv = new BoardVision(myWidget);
-    bv->downloadButton();
+    bv->buttons();
     myWidget->show();
     return a.exec();
 }

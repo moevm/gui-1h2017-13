@@ -15,7 +15,7 @@ BoardVision::BoardVision(QWidget *widget)
 
     //Create 64 tiles (allocating memories to the objects of Tile class)
     ver=55;
-    for(i=0;i<8;i++)
+    for(i=7;i>=0;i--)
     {
         hor=100;
         for(j=0;j<8;j++)
@@ -23,8 +23,8 @@ BoardVision::BoardVision(QWidget *widget)
             tile[i][j] = new Tile(baseWidget);
             tile[i][j]->tileColor=(i+j)%2;
             tile[i][j]->piece=0;
-            tile[i][j]->row=i;
-            tile[i][j]->col=j;
+            tile[i][j]->row=i+1;
+            tile[i][j]->col=j+1;
             tile[i][j]->tileNum=k++;
             tile[i][j]->tileDisplay();
             tile[i][j]->setGeometry(hor,ver,64,64);
@@ -34,51 +34,52 @@ BoardVision::BoardVision(QWidget *widget)
         ver+=64;
     }
 
-    //white pawns
+    //b pawns
     for(j=0;j<8;j++)
     {
         tile[1][j]->piece=1;
-        tile[1][j]->pieceColor=0;
-        tile[1][j]->display('P');
-         //black pawns
+        tile[1][j]->pieceColor=1;
+        tile[1][j]->display(Piece::PieceType::P);
+         //w pawns
         tile[6][j]->piece=1;
-        tile[6][j]->pieceColor=1;
-        tile[6][j]->display('P');
+        tile[6][j]->pieceColor=0;
+        tile[6][j]->display(Piece::PieceType::P);
     }
     //white and black remaining elements
     for(j=0;j<8;j++)
     {
         tile[0][j]->piece=1;
-        tile[0][j]->pieceColor=0;
+        tile[0][j]->pieceColor=1;
         tile[7][j]->piece=1;
-        tile[7][j]->pieceColor=1;
+        tile[7][j]->pieceColor=0;
     }
     {
-    tile[0][0]->display('R');
-    tile[0][1]->display('H');
-    tile[0][2]->display('B');
-    tile[0][3]->display('Q');
-    tile[0][4]->display('K');
-    tile[0][5]->display('B');
-    tile[0][6]->display('H');
-    tile[0][7]->display('R');
+    tile[0][0]->display(Piece::PieceType::R);
+    tile[0][1]->display(Piece::PieceType::N);
+    tile[0][2]->display(Piece::PieceType::B);
+    tile[0][3]->display(Piece::PieceType::Q);
+    tile[0][4]->display(Piece::PieceType::K);
+    tile[0][5]->display(Piece::PieceType::B);
+    tile[0][6]->display(Piece::PieceType::N);
+    tile[0][7]->display(Piece::PieceType::R);
     }
 
     {
-    tile[7][0]->display('R');
-    tile[7][1]->display('H');
-    tile[7][2]->display('B');
-    tile[7][3]->display('Q');
-    tile[7][4]->display('K');
-    tile[7][5]->display('B');
-    tile[7][6]->display('H');
-    tile[7][7]->display('R');
+    tile[7][0]->display(Piece::PieceType::R);
+    tile[7][1]->display(Piece::PieceType::N);
+    tile[7][2]->display(Piece::PieceType::B);
+    tile[7][3]->display(Piece::PieceType::Q);
+    tile[7][4]->display(Piece::PieceType::K);
+    tile[7][5]->display(Piece::PieceType::B);
+    tile[7][6]->display(Piece::PieceType::N);
+    tile[7][7]->display(Piece::PieceType::R);
     }
     Controller *c = new Controller();
     c->initializeGame(false);
     connect(this,SIGNAL(wantMove(QPoint,QPoint)),c,SLOT(makeMove(QPoint,QPoint)) );
+    connect(c,SIGNAL(moveMade(QList<Player*>)),this,SLOT(setupedMove(QList<Player*>)));
 }
-void BoardVision::downloadButton(){
+void BoardVision::buttons(){
     QListWidget *listWgt = new QListWidget(baseWidget);
     DB *db = new DB();
     db->openDB();
@@ -95,10 +96,33 @@ void BoardVision::downloadButton(){
     db->closeDB();
 }
 
+void BoardVision::setupedMove(QList<Player*> pl){
+    for(int i=7;i>=0;i--)
+    {
+        for(int j=0;j<8;j++)
+        {
+            tile[i][j]->piece=0;
+            tile[i][j]->clear();
+        }
+     }
+    for (int i=0; i<pl[0]->getPieces().length();i++){
+        qDebug() <<pl[0]->getPieces()[i]->getPosition();
+    tile[pl[0]->getPieces()[i]->getPosition().y()-1][pl[0]->getPieces()[i]->getPosition().x()-1]->pieceColor=true;
+    tile[pl[0]->getPieces()[i]->getPosition().y()-1][pl[0]->getPieces()[i]->getPosition().x()-1]->piece=1;
+    tile[pl[0]->getPieces()[i]->getPosition().y()-1][pl[0]->getPieces()[i]->getPosition().x()-1]->display(pl[0]->getPieces()[i]->getType());
+    }
+    for (int i=0; i<pl[1]->getPieces().length();i++){
+        qDebug() <<pl[1]->getPieces()[i]->getPosition();
+    tile[pl[1]->getPieces()[i]->getPosition().y()-1][pl[1]->getPieces()[i]->getPosition().x()-1]->pieceColor=false;
+    tile[pl[1]->getPieces()[i]->getPosition().y()-1][pl[1]->getPieces()[i]->getPosition().x()-1]->piece=1;
+    tile[pl[1]->getPieces()[i]->getPosition().y()-1][pl[1]->getPieces()[i]->getPosition().x()-1]->display(pl[1]->getPieces()[i]->getType());
+    }
+}
+
 void BoardVision::tileClicked(QPoint p)
 {
     tile[p.x()-1][p.y()-1]->checked=true;
-    qDebug()<<p.x()-1 <<p.y()-1 <<tile[p.x()-1][p.y()-1]->checked;
+    //qDebug()<<p.x()-1<<p.y()-1<<tile[p.x()-1][p.y()-1]->row <<tile[p.x()-1][p.y()-1]->col  <<tile[p.x()-1][p.y()-1]->checked;
     count++;
     fromto <<p;
     if(count==2){

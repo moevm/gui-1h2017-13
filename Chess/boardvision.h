@@ -9,7 +9,7 @@
 
 class BoardVision : public QObject
 {
-    Q_OBJECT
+    Q_OBJECT 
     int count=0,turn=1,max=0;
     QVector<QPoint> fromto;
     Tile *click1;
@@ -36,13 +36,14 @@ public:
         }
     };
     BoardVision(QWidget *widget);
-    void downloadButton();
+    void buttons();
     signals:
     void wantMove(QPoint from,QPoint to);
 private slots:
     void onListClicked(QListWidgetItem* item );
     void moveList();
     void tileClicked(QPoint p);
+    void setupedMove(QList<Player*> pl);
 };
 
 #endif // BOARDVISION_H

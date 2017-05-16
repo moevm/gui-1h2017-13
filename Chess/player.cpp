@@ -48,3 +48,4 @@ Player::~Player()
         delete pieces[i];
     }
 }
+
