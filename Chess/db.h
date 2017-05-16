@@ -48,7 +48,7 @@ public:
             s='d';
             break;
         case 5:
-            s='i';
+            s='e';
             break;
         case 6:
             s='f';
@@ -231,50 +231,51 @@ public:
 
     void al23_barbo(){
         if(openDB()){
-//            createTable("Al_barbo");
-//            writeMove("Al_barbo",new QPoint(5,2),new QPoint(5,4));
-//            writeMove("Al_barbo",new QPoint(5,7),new QPoint(5,5));
-//            writeMove("Al_barbo",new QPoint(7,1),new QPoint(6,3));
-//            writeMove("Al_barbo",new QPoint(2,8),new QPoint(3,6));
-//            writeMove("Al_barbo",new QPoint(6,1),new QPoint(3,4));
-//            writeMove("Al_barbo",new QPoint(6,8),new QPoint(3,5));
-//            writeMove("Al_barbo",new QPoint(5,1),new QPoint(7,1));//rok
-//            writeMove("Al_barbo",new QPoint(8,1),new QPoint(6,1));
-//            writeMove("Al_barbo",new QPoint(4,7),new QPoint(4,6));
-//            writeMove("Al_barbo",new QPoint(3,2),new QPoint(3,3));
-//            writeMove("Al_barbo",new QPoint(4,8),new QPoint(6,6));
-//            writeMove("Al_barbo",new QPoint(4,2),new QPoint(4,3));
-//            writeMove("Al_barbo",new QPoint(8,7),new QPoint(8,6));
-//            writeMove("Al_barbo",new QPoint(3,1),new QPoint(5,3));
-//            writeMove("Al_barbo",new QPoint(3,5),new QPoint(2,6));
-//            writeMove("Al_barbo",new QPoint(5,3),new QPoint(2,6));
-//            writeMove("Al_barbo",new QPoint(1,7),new QPoint(2,6));
-//            writeMove("Al_barbo",new QPoint(8,2),new QPoint(8,3));
-//            writeMove("Al_barbo",new QPoint(7,1),new QPoint(5,2));
-//            writeMove("Al_barbo",new QPoint(6,3),new QPoint(8,2));
-//            writeMove("Al_barbo",new QPoint(5,7),new QPoint(7,6));
-//            writeMove("Al_barbo",new QPoint(2,1),new QPoint(4,2));
-//            writeMove("Al_barbo",new QPoint(7,6),new QPoint(6,4));
-//            writeMove("Al_barbo",new QPoint(4,2),new QPoint(6,3));
-//            writeMove("Al_barbo",new QPoint(6,6),new QPoint(7,6));
-//            writeMove("Al_barbo",new QPoint(7,2),new QPoint(7,3));
-//            writeMove("Al_barbo",new QPoint(6,4),new QPoint(8,3));
-//            writeMove("Al_barbo",new QPoint(7,1),new QPoint(7,2));
-//            writeMove("Al_barbo",new QPoint(8,3),new QPoint(6,4));
-//            writeMove("Al_barbo",new QPoint(7,2),new QPoint(8,1));
-//            writeMove("Al_barbo",new QPoint(3,8),new QPoint(8,3));
-//            writeMove("Al_barbo",new QPoint(6,1),new QPoint(7,1));
-//            writeMove("Al_barbo",new QPoint(7,6),new QPoint(8,5));
-//            writeMove("Al_barbo",new QPoint(7,3),new QPoint(6,4));
-//            writeMove("Al_barbo",new QPoint(5,5),new QPoint(6,4));
-//            writeMove("Al_barbo",new QPoint(8,2),new QPoint(7,4));
-//            writeMove("Al_barbo",new QPoint(8,3),new QPoint(6,4));
-//            writeMove("Al_barbo",new QPoint(8,1),new QPoint(7,2));
-//            writeMove("Al_barbo",new QPoint(8,5),new QPoint(8,3));
-            QVector <QPoint> v;
-            v<<QPoint(5,2)<<QPoint(5,4)<<QPoint(5,7)<<QPoint(5,5)<<QPoint(7,1)<<QPoint(6,3)<<
-                    QPoint(2,8)<< QPoint(3,6)<<QPoint(6,1)<<QPoint(3,4)<<QPoint(6,8)<<QPoint(3,5);
-            qDebug()<<searchDebute(v);
+            deleteTable("Al_barbo");
+            createTable("Al_barbo");
+            writeMove("Al_barbo",new QPoint(5,2),new QPoint(5,4));
+            writeMove("Al_barbo",new QPoint(5,7),new QPoint(5,5));
+            writeMove("Al_barbo",new QPoint(7,1),new QPoint(6,3));
+            writeMove("Al_barbo",new QPoint(2,8),new QPoint(3,6));
+            writeMove("Al_barbo",new QPoint(6,1),new QPoint(3,4));
+            writeMove("Al_barbo",new QPoint(6,8),new QPoint(3,5));
+            writeMove("Al_barbo",new QPoint(5,1),new QPoint(7,1));//rok
+            writeMove("Al_barbo",new QPoint(8,1),new QPoint(6,1));
+            writeMove("Al_barbo",new QPoint(4,7),new QPoint(4,6));
+            writeMove("Al_barbo",new QPoint(3,2),new QPoint(3,3));
+            writeMove("Al_barbo",new QPoint(4,8),new QPoint(6,6));
+            writeMove("Al_barbo",new QPoint(4,2),new QPoint(4,3));
+            writeMove("Al_barbo",new QPoint(8,7),new QPoint(8,6));
+            writeMove("Al_barbo",new QPoint(3,1),new QPoint(5,3));
+            writeMove("Al_barbo",new QPoint(3,5),new QPoint(2,6));
+            writeMove("Al_barbo",new QPoint(5,3),new QPoint(2,6));
+            writeMove("Al_barbo",new QPoint(1,7),new QPoint(2,6));
+            writeMove("Al_barbo",new QPoint(8,2),new QPoint(8,3));
+            writeMove("Al_barbo",new QPoint(7,8),new QPoint(5,7));
+            writeMove("Al_barbo",new QPoint(6,3),new QPoint(8,2));
+            writeMove("Al_barbo",new QPoint(5,7),new QPoint(7,6));
+            writeMove("Al_barbo",new QPoint(2,1),new QPoint(4,2));
+            writeMove("Al_barbo",new QPoint(7,6),new QPoint(6,4));
+            writeMove("Al_barbo",new QPoint(4,2),new QPoint(6,3));
+            writeMove("Al_barbo",new QPoint(6,6),new QPoint(7,6));
+            writeMove("Al_barbo",new QPoint(7,2),new QPoint(7,3));
+            writeMove("Al_barbo",new QPoint(6,4),new QPoint(8,3));
+            writeMove("Al_barbo",new QPoint(7,1),new QPoint(7,2));
+            writeMove("Al_barbo",new QPoint(8,3),new QPoint(6,4));
+            writeMove("Al_barbo",new QPoint(7,2),new QPoint(8,1));
+            writeMove("Al_barbo",new QPoint(3,8),new QPoint(8,3));
+            writeMove("Al_barbo",new QPoint(6,1),new QPoint(7,1));
+            writeMove("Al_barbo",new QPoint(7,6),new QPoint(8,5));
+            writeMove("Al_barbo",new QPoint(7,3),new QPoint(6,4));
+            writeMove("Al_barbo",new QPoint(5,5),new QPoint(6,4));
+            writeMove("Al_barbo",new QPoint(8,2),new QPoint(7,4));
+            writeMove("Al_barbo",new QPoint(8,3),new QPoint(7,4));
+            writeMove("Al_barbo",new QPoint(8,1),new QPoint(7,2));
+            writeMove("Al_barbo",new QPoint(8,5),new QPoint(8,3));
+            //QVector <QPoint> v;
+            //v<<QPoint(5,2)<<QPoint(5,4)<<QPoint(5,7)<<QPoint(5,5)<<QPoint(7,1)<<QPoint(6,3)<<
+                   // QPoint(2,8)<< QPoint(3,6)<<QPoint(6,1)<<QPoint(3,4)<<QPoint(6,8)<<QPoint(3,5);
+            //qDebug()<<searchDebute(v);
         }
         closeDB();
     }
