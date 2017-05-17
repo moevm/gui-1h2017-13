@@ -72,8 +72,8 @@ void BoardVision::buttons(){
 
    QPushButton *saButton= new QPushButton("Сохранить партию",baseWidget);
     saButton->setGeometry(700,620,150,20);
-   QPushButton *seButton= new QPushButton("Искать партию",baseWidget);
-    seButton->setGeometry(700,650,150,20);
+  // QPushButton *seButton= new QPushButton("Искать партию",baseWidget);
+    //seButton->setGeometry(700,650,150,20);
     db->closeDB();
 }
 void BoardVision::initBoard(){
@@ -219,6 +219,7 @@ void BoardVision::moveList()
     movesTable = new QTableWidget(db->recordCount(table),2,baseWidget);
     movesTable->setGeometry(660,35,250,550);
     movesTable->setStyleSheet("QLabel {background-color: white;}");
+    movesTable->setHorizontalHeaderLabels(QStringList() << "Откуда" << "Куда");
     //QString t="";
     //t=table+'\n'+db->readMovesS(table)+'\n';
     //moves->setText(t);
