@@ -42,13 +42,11 @@ bool Piece::isSamePosition(QPoint pos){
     return Piece::pos == pos;
 }
 
-bool Piece::isUnderAttack(const QList<Piece*> &attackingPieces, const QList<Piece*> &allPieces)
+bool Piece::isUnderAttack(Piece* attackingPiece, const QList<Piece*> &allPieces)
 {
-    for(int i = 0; i<attackingPieces.length(); i++){
-        if(attackingPieces[i]->MovePattern(pos,allPieces)){
+        if(attackingPiece->MovePattern(pos,allPieces)){
             return true;
         }
-    }
     return false;
 }
 
@@ -59,7 +57,6 @@ QPoint Piece::getPosition(){
 void Piece::setPosition(QPoint pos){
     if(!isSamePosition(pos)){
         Piece::pos = pos;
-        Piece::state = Moved;
     }
 }
 

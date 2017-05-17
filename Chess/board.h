@@ -19,7 +19,7 @@ public:
     Piece* getPlayerPiece(const int &playerIndex, const QPoint &pos);
     bool changePlayerPiecePosition(const int &playerIndex, const QPoint &from, const QPoint &to);
     bool deletePlayerPiece(const int &playerIndex, const QPoint &pos);
-    bool isPlayerPieceUnderAttack(const int &playerIndex, const QPoint &pos);
+    //bool isPlayerPieceUnderAttack(const int &playerIndex, const QPoint &pos);
     int getPiecePlayerIndex(const QPoint &pos);
     Piece* createCopy(const QPoint &pos); //creates copy of board piece which not connected with board
 private:

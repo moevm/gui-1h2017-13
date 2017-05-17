@@ -23,12 +23,13 @@ private:
     void moveBackTransmission();
     void createWhitePlayer();
     void createBlackPlayer();
-
+    bool isPlayerKingUnderAttack(unsigned int playerIndex, QPoint kingPosition);
+    bool isCorrectDirectionPawnMovement(QPoint to, QPoint from, unsigned int playerIndex);
 public slots:
     void makeMove(const QPoint &from, const QPoint &to);
 
 signals:
-    void moveMade(QList <Player* > players, unsigned int currentPlayerIndex);
+    void moveMade(QList <Player* > players, unsigned int currentPlayerIndex, bool isChecked);
 };
 
 #endif // CONTROLLER_H

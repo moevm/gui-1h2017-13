@@ -102,6 +102,44 @@ void Controller::createBlackPlayer()
     }
 }
 
+bool Controller::isPlayerKingUnderAttack(unsigned int playerIndex, QPoint kingPosition)
+{
+    Piece* pieceUnderAttack = board-> getPlayerPiece( playerIndex, kingPosition);
+    //QList <Piece* > enemyPieces;
+    QList <Player* >players = board->getPlayers();
+    for(int i=0; i<players.length(); i++){
+        if(i!=playerIndex){
+            //enemyPieces.append(players[i]->getPieces());
+            QList <Piece *>playerPieces = players[i]->getPieces();
+            for(int j=0; j<playerPieces.length(); j++)
+            {
+                if(playerPieces[j]->getType()==Piece::P)
+                {
+                    QPoint pieceUnderAttackPosition = pieceUnderAttack->getPosition();
+                    QPoint attackingPiecePosition = playerPieces[j]->getPosition();
+                    int diffX = pieceUnderAttackPosition.x() - attackingPiecePosition.x();
+                    int diffY = pieceUnderAttackPosition.y() - attackingPiecePosition.y();
+                    if(isCorrectDirectionPawnMovement(pieceUnderAttackPosition,attackingPiecePosition, j) && abs(diffX) == 1 && abs(diffY) == 1){
+                        return true;
+                    }
+                } else if(pieceUnderAttack->isUnderAttack(playerPieces[j], board->getPieces())){
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool Controller::isCorrectDirectionPawnMovement(QPoint to, QPoint from, unsigned int playerIndex)
+{
+    if((to.y()-from.y() < 0 && playerIndex == 0) || (to.y()-from.y()>0 && playerIndex == 1)){
+        return false;
+    }else{
+        return true;
+    }
+}
+
 //Добавить проверку шаха/мата! сделано, не тестировалось
 //Добавить удаление при сьедении фигуры! сделано, не тестировалось
 //Реализовать механизм рокировки. сделано, не тестировалось
@@ -131,7 +169,7 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
                 switch(pieceToMoveCopy->getType())
                 {
                 case Piece::K:
-                    // casteling condition
+                    // Casteling condition
                     if(pieceToMoveCopy->getPosition().x() - pieceToMove->getPosition().x() == 2)// left casteling
                     {
                         Piece* kingCopy = board->createCopy(to);
@@ -159,9 +197,9 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
                          int diffIntersectsX = pieceToEatCopy->getPosition().x()  -  to.x();
                          int diffIntersectsY = pieceToEatCopy->getPosition().y() -  to.y();
                          //back and forward movement check
-                         if( (diffIntersectsX == 0 && diffIntersectsY == 0) || (diffY < 0 && prevPlayerIndex == 0) || (diffY>0 && prevPlayerIndex == 1))
+                         if( (diffIntersectsX == 0 && diffIntersectsY == 0) || !isCorrectDirectionPawnMovement(to, from, prevPlayerIndex))
                          {
-                             if(!board->isPlayerPieceUnderAttack(prevPlayerIndex, kingPosition))// if king is not attacked
+                             if(!isPlayerKingUnderAttack(prevPlayerIndex, kingPosition))// if king is not attacked
                              {
                                  moveBackTransmission();
                                  board->changePlayerPiecePosition(currPlayerIndex, to, from);
@@ -174,17 +212,20 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
                     } else{
                         if(abs(diffY) == 1 && abs(diffX) == 1)
                         {
+                            bool ElPassant = false;
+                                 if(pieceToEatCopy->isEmpty()){
+                                     delete pieceToEatCopy;
+                                     pieceToEatCopy = board->createCopy(QPoint(to.x(), from.y()));
+                                     pieceToEatCopyPlayerIndex = board->getPiecePlayerIndex(QPoint(to.x(), from.y()));
+                                     ElPassant = true;
+                                 }
                                  int diffIntersectsX = pieceToEatCopy->getPosition().x()  -  to.x();
                                  int diffIntersectsY = pieceToEatCopy->getPosition().y() -  to.y();
-                                 if(pieceToEatCopy->isEmpty()){ // доделать el passant!!!!
-                                     delete pieceToEatCopy;
-                                     pieceToEatCopy = board->createCopy(QPoint(to.x(), to.y() + diffIntersectsY));
-                                 }
-                                 //back and forward movement check, el passant check
+                                 //back and forward pawn movement check, el passant check
                                  if(!((diffIntersectsX == 0 && diffIntersectsY == 0) ||
-                                         (abs(diffIntersectsX) == 0 && abs(diffIntersectsY) == 1)) || (diffY < 0 && prevPlayerIndex == 0) || (diffY>0 && prevPlayerIndex == 1)) //  pieceToEatCopy->getType()==Piece::P
+                                         (abs(diffIntersectsX) == 0 && abs(diffIntersectsY) == 1)) || !isCorrectDirectionPawnMovement(to, from, prevPlayerIndex)) //  pieceToEatCopy->getType()==Piece::P
                                  {
-                                     if(!board->isPlayerPieceUnderAttack(prevPlayerIndex, kingPosition))// if king is not attacked
+                                     if(!isPlayerKingUnderAttack(prevPlayerIndex, kingPosition))// if king is not attacked
                                      {
                                          moveBackTransmission();
                                          board->changePlayerPiecePosition(currPlayerIndex, to, from);
@@ -192,6 +233,10 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
                                          {
                                              board->addPlayerPiece(pieceToEatCopyPlayerIndex, pieceToEatCopy->getType(), pieceToEatCopy->getPosition(), pieceToEatCopy->getState());
                                          }
+                                     }
+                                 } else{ // добавить проверку того, что вражеская пешка походила впервые!!!!!11!!
+                                     if(ElPassant){
+                                         board->deletePlayerPiece(pieceToEatCopyPlayerIndex, QPoint(to.x(), from.y()));
                                      }
                                  }
                         }
@@ -211,7 +256,7 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
                     break;
                 }
 
-                if(board->isPlayerPieceUnderAttack(prevPlayerIndex, kingPosition)){ //check condition
+                if(isPlayerKingUnderAttack(prevPlayerIndex, kingPosition)){ //check condition
                     moveBackTransmission();
                     board->changePlayerPiecePosition(currPlayerIndex, to, from);
                     if(!pieceToEatCopy->isEmpty())
@@ -226,7 +271,7 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
             }
             delete pieceToMoveCopy;
             delete pieceToEatCopy;
-            emit moveMade(board->getPlayers(), currPlayerIndex);
+            emit moveMade(board->getPlayers(), currPlayerIndex, isPlayerKingUnderAttack(currPlayerIndex, kings[currPlayerIndex]->getPosition()));
         } else {
             delete pieceToMove;
         }

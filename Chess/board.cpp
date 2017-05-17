@@ -107,7 +107,7 @@ bool Board::deletePlayerPiece(const int &playerIndex, const QPoint &pos)
     return players[playerIndex]->deletePiece(pos);
 }
 
-bool Board::isPlayerPieceUnderAttack(const int &playerIndex, const QPoint &pos)
+/*bool Board::isPlayerPieceUnderAttack(const int &playerIndex, const QPoint &pos)
 {
     Piece* pieceUnderAttack = getPlayerPiece( playerIndex, pos);
     QList <Piece * > enemyPieces;
@@ -117,7 +117,7 @@ bool Board::isPlayerPieceUnderAttack(const int &playerIndex, const QPoint &pos)
         }
     }
     return pieceUnderAttack->isUnderAttack(enemyPieces, getPieces());
-}
+}*/
 
 int Board::getPiecePlayerIndex(const QPoint &pos)
 {
