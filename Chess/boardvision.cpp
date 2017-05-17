@@ -72,8 +72,8 @@ void BoardVision::buttons(){
 
    QPushButton *saButton= new QPushButton("Сохранить партию",baseWidget);
     saButton->setGeometry(700,620,150,20);
-   QPushButton *seButton= new QPushButton("Искать партию",baseWidget);
-    seButton->setGeometry(700,650,150,20);
+  // QPushButton *seButton= new QPushButton("Искать партию",baseWidget);
+    //seButton->setGeometry(700,650,150,20);
     db->closeDB();
 }
 void BoardVision::initBoard(){
@@ -126,13 +126,11 @@ void BoardVision::initBoard(){
 }
 
 void BoardVision::clearBoard(){
-
-    c->destroyGame();
-    index=-1;
-    color->tileColor=0;
-    movesTable->clear();
-    initBoard();
-    c->initializeGame(false);
+    c->refreshGame();
+    //index=-1;
+    //color->tileColor=0;
+    //movesTable->clear();
+    //initBoard();
 }
 
 void BoardVision::backMove(){
@@ -187,16 +185,27 @@ void BoardVision::setupedMove(QList<Player*> pl,unsigned int play){
 
 void BoardVision::tileClicked(QPoint p)
 {
-    tile[p.y()-1][p.x()-1]->checked=true;
     //qDebug()<<p.x()-1<<p.y()-1<<tile[p.x()-1][p.y()-1]->row <<tile[p.x()-1][p.y()-1]->col  <<tile[p.x()-1][p.y()-1]->checked;
     fromto <<p;
+    if(tile[fromto[0].y()-1][fromto[0].x()-1]->piece){
+        tile[fromto[0].y()-1][fromto[0].x()-1]->checked=true;
+        tile[fromto[0].y()-1][fromto[0].x()-1]->tileDisplay();
+    }
     if(fromto.length()>0 && fromto[0]!=p){
         count++;
         if(count==2){
             count=1;
            // qDebug()<<tile[fromto[0].y()-1][fromto[0].x()-1]->piece;
             if(tile[fromto[0].y()-1][fromto[0].x()-1]->piece)
+            {
+                tile[p.y()-1][p.x()-1]->checked=true;
+                tile[p.y()-1][p.x()-1]->tileDisplay();
                 emit wantMove(fromto[0],p);
+                tile[p.y()-1][p.x()-1]->checked=false;
+                tile[p.y()-1][p.x()-1]->tileDisplay();
+                tile[fromto[0].y()-1][fromto[0].x()-1]->checked=false;
+                tile[fromto[0].y()-1][fromto[0].x()-1]->tileDisplay();
+            }
             fromto.clear();
         }
     }
@@ -210,6 +219,7 @@ void BoardVision::moveList()
     movesTable = new QTableWidget(db->recordCount(table),2,baseWidget);
     movesTable->setGeometry(660,35,250,550);
     movesTable->setStyleSheet("QLabel {background-color: white;}");
+    movesTable->setHorizontalHeaderLabels(QStringList() << "Откуда" << "Куда");
     //QString t="";
     //t=table+'\n'+db->readMovesS(table)+'\n';
     //moves->setText(t);
