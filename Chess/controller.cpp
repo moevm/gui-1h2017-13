@@ -103,8 +103,8 @@ void Controller::createBlackPlayer()
 
 //Добавить проверку шаха/мата! сделано, не тестировалось
 //Добавить удаление при сьедении фигуры! сделано, не тестировалось
-//Реализовать механизм рокировки сделано, не тестировалось
-//Ограничить движение пешки только вперед для каждого из игроков
+//Реализовать механизм рокировки. сделано, не тестировалось
+//Ограничить движение пешки только вперед для каждого из игроков. сделано, не тестировалось
 //Добавить превращение пешки в фигуру после прохождения доски
 //Обозначить ситуацию el passant
 void Controller::makeMove(const QPoint &from, const QPoint& to)
@@ -112,7 +112,7 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
     if(board!=NULL)
     {
         Piece* pieceToMove = board->getPlayerPiece(currPlayerIndex, from);
-        if(!pieceToMove->isEmpty()){ // "empty" clicks block
+        if(!pieceToMove->isEmpty()){ // "empty" piece movement block
             Piece* pieceToMoveCopy = board->createCopy(from);
             Piece* pieceToEatCopy = board->createCopy(to);
             unsigned int pieceToEatCopyPlayerIndex = board->getPiecePlayerIndex(to);
@@ -150,34 +150,62 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
                         delete kingCopy;
                     }
                     break;
-                case Piece::P:
+                case Piece::P:{
                     //Pawns movement processing
-
-                    /*if((abs(diffY) == 1 || abs(diffY) == 2) && diffX == 0){
-                     for(int i =0; i<pieces.length(); i++){
-                         int diffIntersectsX = pieces[i]->getPosition().x() -  newPos.x();
-                         int diffIntersectsY = pieces[i]->getPosition().y() -  newPos.y();
-                         if(diffIntersectsX == 0 && diffIntersectsY == 0 && pieces[i]->getType()==P)
-                             return false;
-                     }
-                     return true;
+                    int diffX = to.x() - from.x();
+                    int diffY = to.y() - from.y();
+                    if((abs(diffY) == 1 && diffX == 0) || (abs(diffY) == 2 && diffX == 0 && pieceToMoveCopy->getState() == Piece::NonMoved)){
+                         int diffIntersectsX = pieceToEatCopy->getPosition().x()  -  to.x();
+                         int diffIntersectsY = pieceToEatCopy->getPosition().y() -  to.y();
+                         //back and forward movement check
+                         if( (diffIntersectsX == 0 && diffIntersectsY == 0) || (diffY < 0 && prevPlayerIndex == 0) || (diffY>0 && prevPlayerIndex == 1))
+                         {
+                             if(!board->isPlayerPieceUnderAttack(prevPlayerIndex, kingPosition))// if king is not attacked
+                             {
+                                 moveBackTransmission();
+                                 board->changePlayerPiecePosition(currPlayerIndex, to, from);
+                                 if(!pieceToEatCopy->isEmpty())
+                                 {
+                                     board->addPlayerPiece(pieceToEatCopyPlayerIndex, pieceToEatCopy->getType(), pieceToEatCopy->getPosition(), pieceToEatCopy->getState());
+                                 }
+                             }
+                         }
                     } else{
                         if(abs(diffY) == 1 && abs(diffX) == 1)
                         {
-                             for(int i =0; i<pieces.length(); i++)
-                             {
-                                 int diffIntersectsX = pieces[i]->getPosition().x() -  newPos.x();
-                                 int diffIntersectsY = pieces[i]->getPosition().y() -  newPos.y();
-                                 if((diffIntersectsX == 0 && diffIntersectsY == 0) ||
-                                         (abs(diffIntersectsX) == 0 && abs(diffIntersectsY) == 1))
-                                     return true;
-                             }
-                       }
-                        return false;
+                                 int diffIntersectsX = pieceToEatCopy->getPosition().x()  -  to.x();
+                                 int diffIntersectsY = pieceToEatCopy->getPosition().y() -  to.y();
+                                 if(pieceToEatCopy->isEmpty()){ // доделать el passant!!!!
+                                     delete pieceToEatCopy;
+                                     pieceToEatCopy = board->createCopy(QPoint(to.x(), to.y() + diffIntersectsY));
+                                 }
+                                 //back and forward movement check, el passant check
+                                 if(!((diffIntersectsX == 0 && diffIntersectsY == 0) ||
+                                         (abs(diffIntersectsX) == 0 && abs(diffIntersectsY) == 1)) || (diffY < 0 && prevPlayerIndex == 0) || (diffY>0 && prevPlayerIndex == 1)) //  pieceToEatCopy->getType()==Piece::P
+                                 {
+                                     if(!board->isPlayerPieceUnderAttack(prevPlayerIndex, kingPosition))// if king is not attacked
+                                     {
+                                         moveBackTransmission();
+                                         board->changePlayerPiecePosition(currPlayerIndex, to, from);
+                                         if(!pieceToEatCopy->isEmpty())
+                                         {
+                                             board->addPlayerPiece(pieceToEatCopyPlayerIndex, pieceToEatCopy->getType(), pieceToEatCopy->getPosition(), pieceToEatCopy->getState());
+                                         }
+                                     }
+                                 }
+                        }
+                        else
+                        {
+                            moveBackTransmission();
+                            board->changePlayerPiecePosition(currPlayerIndex, to, from);
+                            if(!pieceToEatCopy->isEmpty())
+                            {
+                                board->addPlayerPiece(pieceToEatCopyPlayerIndex, pieceToEatCopy->getType(), pieceToEatCopy->getPosition(), pieceToEatCopy->getState());
+                            }
+                        }
                     }
-                }
-                 return false;*/
                     break;
+                }
                 default:
                     break;
                 }
@@ -188,7 +216,6 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
                     if(!pieceToEatCopy->isEmpty())
                     {
                         board->addPlayerPiece(pieceToEatCopyPlayerIndex, pieceToEatCopy->getType(), pieceToEatCopy->getPosition(), pieceToEatCopy->getState());
-                        delete pieceToEatCopy;
                     }
                 }
             }
@@ -199,8 +226,7 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
             delete pieceToMoveCopy;
             delete pieceToEatCopy;
             emit moveMade(board->getPlayers(), currPlayerIndex);
-        }
-        else{
+        } else {
             delete pieceToMove;
         }
     }
