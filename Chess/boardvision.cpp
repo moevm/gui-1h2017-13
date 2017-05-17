@@ -12,6 +12,8 @@ BoardVision::BoardVision(QWidget *widget)
     border[2]->outline(baseWidget,80,65,1);
     border[2]->outline(baseWidget,612,65,1);
     }
+    kLabel = new QLabel("",baseWidget);
+    kLabel->setGeometry(300,20,40,20);
 
     //Create 64 tiles (allocating memories to the objects of Tile class)
     ver=65;
@@ -85,7 +87,9 @@ void BoardVision::buttons(){
     QPushButton *nextButton= new QPushButton(">",baseWidget);
     nextButton->setGeometry(550,600,50,20);
     connect( nextButton, SIGNAL(clicked()),this,SLOT(nextMove()));
-    //if(!movesTable->isVisible()) nextButton->r
+    //if(movesTable==nullptr) nextButton->setEnabled(false);
+    //else nextButton->setEnabled(true);
+
     QPushButton *clearButton= new QPushButton("Очистить",baseWidget);
     clearButton->setGeometry(455,600,90,20);
     connect( clearButton, SIGNAL(clicked()),this,SLOT(clearBoard()));
@@ -200,15 +204,16 @@ void BoardVision::nextMove(){
     db->closeDB();
 }
 void BoardVision::setupedMove(QList<Player*> pl,unsigned int play, bool k){
-    QLabel *kLabel = new QLabel("Шах!",baseWidget);
-    kLabel->setGeometry(300,20,40,20);
+
     QFont font = kLabel->font();
     font.setPointSize(14);
     kLabel->setFont(font);
+    kLabel->show();
+    qDebug() << k;
     if(k)
-       kLabel->show();
+       kLabel->setText("Шах!");
     else
-       kLabel->hide();
+       kLabel->clear();
     for(int i=7;i>=0;i--)
     {
         for(int j=0;j<8;j++)

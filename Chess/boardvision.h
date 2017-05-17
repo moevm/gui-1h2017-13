@@ -20,6 +20,7 @@ class BoardVision : public QObject
     QTableWidget *movesTable;
     Controller *c;
     DB *db = new DB();
+    QLabel *kLabel;
     //unsigned int player;
 public:
     class Border
