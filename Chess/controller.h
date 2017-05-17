@@ -18,6 +18,8 @@ public:
 private:
     Board* board;
     QList <Piece* > kings;
+    QList <Piece*> ElPassantPieces;
+    QList <unsigned> ElPassantTTLs;
     unsigned currPlayerIndex;
     void moveTransmission();
     void moveBackTransmission();
@@ -25,11 +27,14 @@ private:
     void createBlackPlayer();
     bool isPlayerKingUnderAttack(unsigned int playerIndex, QPoint kingPosition);
     bool isCorrectDirectionPawnMovement(QPoint to, QPoint from, unsigned int playerIndex);
+    void decreaseElPassantTTLs();
+    void increaseElPassantTTLs();
+    bool isElPassantPieceMatch(Piece* ptr);
 public slots:
     void makeMove(const QPoint &from, const QPoint &to);
 
 signals:
-    void moveMade(QList <Player* > players, unsigned int currentPlayerIndex, bool isChecked);
+    void moveMade(QList <Player* > players, unsigned int currentPlayerIndex);
 };
 
 #endif // CONTROLLER_H
