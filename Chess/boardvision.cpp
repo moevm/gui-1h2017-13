@@ -15,6 +15,14 @@ BoardVision::BoardVision(QWidget *widget)
 
     //Create 64 tiles (allocating memories to the objects of Tile class)
     ver=55;
+    color= new Tile(baseWidget);
+    color->tileColor=0;
+    color->piece=0;
+    color->row=0;
+    color->col=0;
+    color->tileNum=0;
+    color->tileDisplay();
+    color->setGeometry(30,620,50,50);
     for(i=7;i>=0;i--)
     {
         hor=100;
@@ -39,7 +47,7 @@ BoardVision::BoardVision(QWidget *widget)
     c = new Controller();
     c->initializeGame(false);
     connect(this,SIGNAL(wantMove(QPoint,QPoint)),c,SLOT(makeMove(QPoint,QPoint)) );
-    connect(c,SIGNAL(moveMade(QList<Player*>)),this,SLOT(setupedMove(QList<Player*>)));
+    connect(c,SIGNAL(moveMade(QList<Player*>,unsigned int)),this,SLOT(setupedMove(QList<Player*>,unsigned int)));
 }
 void BoardVision::buttons(){
     listWgt = new QListWidget(baseWidget);
@@ -59,7 +67,7 @@ void BoardVision::buttons(){
     nextButton->setGeometry(550,600,50,20);
     connect( nextButton, SIGNAL(clicked()),this,SLOT(nextMove()));
     QPushButton *clearButton= new QPushButton("Очистить",baseWidget);
-    clearButton->setGeometry(460,600,90,20);
+    clearButton->setGeometry(450,600,90,20);
     connect( clearButton, SIGNAL(clicked()),this,SLOT(clearBoard()));
 
    QPushButton *saButton= new QPushButton("Сохранить партию",baseWidget);
@@ -120,10 +128,10 @@ void BoardVision::initBoard(){
 void BoardVision::clearBoard(){
 
     c->destroyGame();
-    table="";
     index=-1;
-    initBoard();
+    color->tileColor=0;
     movesTable->clear();
+    initBoard();
     c->initializeGame(false);
 }
 
@@ -152,7 +160,7 @@ void BoardVision::nextMove(){
     }
     db->closeDB();
 }
-void BoardVision::setupedMove(QList<Player*> pl){
+void BoardVision::setupedMove(QList<Player*> pl,unsigned int play){
     for(int i=7;i>=0;i--)
     {
         for(int j=0;j<8;j++)
@@ -161,6 +169,8 @@ void BoardVision::setupedMove(QList<Player*> pl){
             tile[i][j]->clear();
         }
      }
+    color->tileColor=play;
+    color->tileDisplay();
     for (int i=0; i<pl[0]->getPieces().length();i++){
         //qDebug() <<pl[0]->getPieces()[i]->getPosition();
     tile[pl[0]->getPieces()[i]->getPosition().y()-1][pl[0]->getPieces()[i]->getPosition().x()-1]->pieceColor=true;
@@ -177,16 +187,19 @@ void BoardVision::setupedMove(QList<Player*> pl){
 
 void BoardVision::tileClicked(QPoint p)
 {
-    tile[p.x()-1][p.y()-1]->checked=true;
+    tile[p.y()-1][p.x()-1]->checked=true;
     //qDebug()<<p.x()-1<<p.y()-1<<tile[p.x()-1][p.y()-1]->row <<tile[p.x()-1][p.y()-1]->col  <<tile[p.x()-1][p.y()-1]->checked;
-    count++;
     fromto <<p;
-    if(count==2){
-        count=0;
-        emit wantMove(fromto[0],fromto[1]);
-        fromto.clear();
+    if(fromto.length()>0 && fromto[0]!=p){
+        count++;
+        if(count==2){
+            count=1;
+           // qDebug()<<tile[fromto[0].y()-1][fromto[0].x()-1]->piece;
+            if(tile[fromto[0].y()-1][fromto[0].x()-1]->piece)
+                emit wantMove(fromto[0],p);
+            fromto.clear();
+        }
     }
-
 }
 
 void BoardVision::moveList()
