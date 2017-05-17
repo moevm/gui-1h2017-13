@@ -2,6 +2,7 @@
 #define CONTROLLER_H
 #include "board.h"
 #include <QObject>
+#include <QDebug>
 
 class Controller : public QObject
 {

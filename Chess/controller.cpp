@@ -25,6 +25,7 @@ void Controller::refreshGame()
      createWhitePlayer();
      createBlackPlayer();
      currPlayerIndex = 0;
+     emit moveMade(board->getPlayers(), currPlayerIndex);
 }
 
 void Controller::destroyGame()
@@ -109,6 +110,7 @@ void Controller::createBlackPlayer()
 //Обозначить ситуацию el passant
 void Controller::makeMove(const QPoint &from, const QPoint& to)
 {
+    qDebug()<<from<<to;
     if(board!=NULL)
     {
         Piece* pieceToMove = board->getPlayerPiece(currPlayerIndex, from);
