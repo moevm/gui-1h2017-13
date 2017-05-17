@@ -29,7 +29,7 @@ void Controller::refreshGame()
      createWhitePlayer();
      createBlackPlayer();
      currPlayerIndex = 0;
-     emit moveMade(board->getPlayers(), currPlayerIndex);
+     emit moveMade(board->getPlayers(), currPlayerIndex, false);
 }
 
 void Controller::destroyGame()
@@ -309,7 +309,7 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
             }
             delete pieceToMoveCopy;
             delete pieceToEatCopy;
-            emit moveMade(board->getPlayers(), currPlayerIndex);
+            emit moveMade(board->getPlayers(), currPlayerIndex, isPlayerKingUnderAttack(currPlayerIndex, kings[currPlayerIndex]->getPosition()));
         } else {
             delete pieceToMove;
         }

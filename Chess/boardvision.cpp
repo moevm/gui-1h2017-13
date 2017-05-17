@@ -85,6 +85,7 @@ void BoardVision::buttons(){
     QPushButton *nextButton= new QPushButton(">",baseWidget);
     nextButton->setGeometry(550,600,50,20);
     connect( nextButton, SIGNAL(clicked()),this,SLOT(nextMove()));
+    //if(!movesTable->isVisible()) nextButton->r
     QPushButton *clearButton= new QPushButton("Очистить",baseWidget);
     clearButton->setGeometry(455,600,90,20);
     connect( clearButton, SIGNAL(clicked()),this,SLOT(clearBoard()));

@@ -34,7 +34,7 @@ public slots:
     void makeMove(const QPoint &from, const QPoint &to);
 
 signals:
-    void moveMade(QList <Player* > players, unsigned int currentPlayerIndex);
+    void moveMade(QList <Player* > players, unsigned int currentPlayerIndex, bool isChecked);
 };
 
 #endif // CONTROLLER_H

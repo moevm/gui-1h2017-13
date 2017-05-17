@@ -7,16 +7,17 @@
 class DB
 {
 private:
-    QSqlDatabase db;
+    QSqlDatabase db= QSqlDatabase::addDatabase("QSQLITE");
+    //db.setDatabaseName(QDir::currentPath()+"/chess.db");
     //QSqlQuery q;
 public:
     DB()
     {
-        db= QSqlDatabase::addDatabase("QSQLITE");
-        db.setDatabaseName(QDir::currentPath()+"/chess.db");
+        //db= QSqlDatabase::addDatabase("QSQLITE");
+        db.setDatabaseName("C:/Users/Niktesla/Desktop/Projects/gui-1h2017-13.git/Chess/chess.db");
     }
     ~DB(){
-        closeDB();
+
     }
 
     bool openDB()
@@ -76,6 +77,11 @@ public:
     {
         //qDebug() << db.tables();
         return db.tables();
+    }
+    bool containsTable(const QString &name)
+    {
+        //qDebug() << db.tables();
+        return db.tables().contains(name);
     }
 
     int recordCount(const QString &name)
@@ -282,49 +288,45 @@ public:
     void Murphy(){
         //DB *db = new DB();
         if(openDB()){
-    //        createTable("ChessMorphy");
-    //        writeMove("ChessMorphy",new QPoint(5,2),new QPoint(5,4));
-    //        writeMove("ChessMorphy",new QPoint(5,7),new QPoint(5,5));
-    //        writeMove("ChessMorphy",new QPoint(7,1),new QPoint(6,3));
-    //        writeMove("ChessMorphy",new QPoint(4,7),new QPoint(4,6));
-    //        writeMove("ChessMorphy",new QPoint(4,2),new QPoint(4,4));
-    //        writeMove("ChessMorphy",new QPoint(3,8),new QPoint(7,4));
-    //        writeMove("ChessMorphy",new QPoint(4,4),new QPoint(5,5));
-    //        writeMove("ChessMorphy",new QPoint(7,4),new QPoint(6,3));
-    //        writeMove("ChessMorphy",new QPoint(4,1),new QPoint(6,3));
-    //        writeMove("ChessMorphy",new QPoint(4,6),new QPoint(5,5));
-    //        writeMove("ChessMorphy",new QPoint(6,1),new QPoint(3,4));
-    //        writeMove("ChessMorphy",new QPoint(7,8),new QPoint(6,6));
-    //        writeMove("ChessMorphy",new QPoint(6,3),new QPoint(2,3));
-    //        writeMove("ChessMorphy",new QPoint(4,8),new QPoint(5,7));
-    //        writeMove("ChessMorphy",new QPoint(2,1),new QPoint(3,3));
-    //        writeMove("ChessMorphy",new QPoint(3,7),new QPoint(3,6));
-    //        writeMove("ChessMorphy",new QPoint(3,1),new QPoint(7,5));
-    //        writeMove("ChessMorphy",new QPoint(2,7),new QPoint(2,5));
-    //        writeMove("ChessMorphy",new QPoint(3,3),new QPoint(2,5));
-    //        writeMove("ChessMorphy",new QPoint(3,6),new QPoint(2,5));
-    //        writeMove("ChessMorphy",new QPoint(3,4),new QPoint(2,5));
-    //        writeMove("ChessMorphy",new QPoint(2,8),new QPoint(4,7));
-    //        writeMove("ChessMorphy",new QPoint(5,1),new QPoint(3,1)); //рокировка
-    //        writeMove("ChessMorphy",new QPoint(1,1),new QPoint(4,1));
-    //        writeMove("ChessMorphy",new QPoint(1,8),new QPoint(4,8));
-    //        writeMove("ChessMorphy",new QPoint(4,1),new QPoint(4,7));
-    //        writeMove("ChessMorphy",new QPoint(4,8),new QPoint(4,7));
-    //        writeMove("ChessMorphy",new QPoint(8,1),new QPoint(4,1));
-    //        writeMove("ChessMorphy",new QPoint(5,7),new QPoint(5,6));
-    //        writeMove("ChessMorphy",new QPoint(2,5),new QPoint(4,7));
-    //        writeMove("ChessMorphy",new QPoint(6,6),new QPoint(4,7));
-    //        writeMove("ChessMorphy",new QPoint(4,4),new QPoint(5,5));
-    //        writeMove("ChessMorphy",new QPoint(2,3),new QPoint(2,8));
-    //        writeMove("ChessMorphy",new QPoint(4,7),new QPoint(2,8));
-    //        writeMove("ChessMorphy",new QPoint(4,1),new QPoint(4,8));
+            deleteTable("ChessMorphy");
+            createTable("ChessMorphy");
+            writeMove("ChessMorphy",new QPoint(5,2),new QPoint(5,4));
+            writeMove("ChessMorphy",new QPoint(5,7),new QPoint(5,5));
+            writeMove("ChessMorphy",new QPoint(7,1),new QPoint(6,3));
+            writeMove("ChessMorphy",new QPoint(4,7),new QPoint(4,6));
+            writeMove("ChessMorphy",new QPoint(4,2),new QPoint(4,4));
+            writeMove("ChessMorphy",new QPoint(3,8),new QPoint(7,4));
+            writeMove("ChessMorphy",new QPoint(4,4),new QPoint(5,5));
+            writeMove("ChessMorphy",new QPoint(7,4),new QPoint(6,3));
+            writeMove("ChessMorphy",new QPoint(4,1),new QPoint(6,3));
+            writeMove("ChessMorphy",new QPoint(4,6),new QPoint(5,5));
+            writeMove("ChessMorphy",new QPoint(6,1),new QPoint(3,4));
+            writeMove("ChessMorphy",new QPoint(7,8),new QPoint(6,6));
+            writeMove("ChessMorphy",new QPoint(6,3),new QPoint(2,3));
+            writeMove("ChessMorphy",new QPoint(4,8),new QPoint(5,7));
+            writeMove("ChessMorphy",new QPoint(2,1),new QPoint(3,3));
+            writeMove("ChessMorphy",new QPoint(3,7),new QPoint(3,6));
+            writeMove("ChessMorphy",new QPoint(3,1),new QPoint(7,5));
+            writeMove("ChessMorphy",new QPoint(2,7),new QPoint(2,5));
+            writeMove("ChessMorphy",new QPoint(3,3),new QPoint(2,5));
+            writeMove("ChessMorphy",new QPoint(3,6),new QPoint(2,5));
+            writeMove("ChessMorphy",new QPoint(3,4),new QPoint(2,5));
+            writeMove("ChessMorphy",new QPoint(2,8),new QPoint(4,7));
+            writeMove("ChessMorphy",new QPoint(5,1),new QPoint(3,1)); //рокировка
+            writeMove("ChessMorphy",new QPoint(1,1),new QPoint(4,1));
+            writeMove("ChessMorphy",new QPoint(1,8),new QPoint(4,8));
+            writeMove("ChessMorphy",new QPoint(4,1),new QPoint(4,7));
+            writeMove("ChessMorphy",new QPoint(4,8),new QPoint(4,7));
+            writeMove("ChessMorphy",new QPoint(8,1),new QPoint(4,1));
+            writeMove("ChessMorphy",new QPoint(5,7),new QPoint(5,6));
+            writeMove("ChessMorphy",new QPoint(2,5),new QPoint(4,7));
+            writeMove("ChessMorphy",new QPoint(6,6),new QPoint(4,7));
+            writeMove("ChessMorphy",new QPoint(4,4),new QPoint(5,5));
+            writeMove("ChessMorphy",new QPoint(2,3),new QPoint(2,8));
+            writeMove("ChessMorphy",new QPoint(4,7),new QPoint(2,8));
+            writeMove("ChessMorphy",new QPoint(4,1),new QPoint(4,8));
            // QPoint m[12]={QPoint(5,2),QPoint(5,4),QPoint(5,7),QPoint(5,5),QPoint(7,1),QPoint(6,3),
                   //  QPoint(4,7), QPoint(4,6),QPoint(4,2),QPoint(4,4),QPoint(3,8),QPoint(7,4)};
-            QVector <QPoint> v;
-            v<<QPoint(5,2)<<QPoint(5,4)<<QPoint(5,7)<<QPoint(5,5)<<QPoint(7,1)<<QPoint(6,3)<<
-                    QPoint(4,7)<< QPoint(4,6)<<QPoint(4,2)<<QPoint(4,4)<<QPoint(3,8)<<QPoint(7,4);
-            //qDebug()<<searchDebute(m);
-            qDebug()<<searchDebute(v);
         }
         closeDB();
     }
