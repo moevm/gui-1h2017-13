@@ -7,14 +7,14 @@ BoardVision::BoardVision(QWidget *widget)
     baseWidget=widget;
     //borderDisplay
     {
-    border[0]->outline(baseWidget,80,35,0);
-    border[1]->outline(baseWidget,80,567,0);
-    border[2]->outline(baseWidget,80,55,1);
-    border[2]->outline(baseWidget,612,55,1);
+    border[0]->outline(baseWidget,80,45,0);
+    border[1]->outline(baseWidget,80,577,0);
+    border[2]->outline(baseWidget,80,65,1);
+    border[2]->outline(baseWidget,612,65,1);
     }
 
     //Create 64 tiles (allocating memories to the objects of Tile class)
-    ver=55;
+    ver=65;
     color= new Tile(baseWidget);
     color->tileColor=0;
     color->piece=0;
@@ -23,6 +23,8 @@ BoardVision::BoardVision(QWidget *widget)
     color->tileNum=0;
     color->tileDisplay();
     color->setGeometry(30,620,50,50);
+    QLabel *playerLabel = new QLabel("Игрок:",baseWidget);
+    playerLabel->setGeometry(30,590,60,20);
     for(i=7;i>=0;i--)
     {
         hor=100;
@@ -43,39 +45,78 @@ BoardVision::BoardVision(QWidget *widget)
     }
 
     //b pawns
-
     c = new Controller();
     c->initializeGame(false);
     connect(this,SIGNAL(wantMove(QPoint,QPoint)),c,SLOT(makeMove(QPoint,QPoint)) );
-    connect(c,SIGNAL(moveMade(QList<Player*>,unsigned int)),this,SLOT(setupedMove(QList<Player*>,unsigned int)));
+    connect(c,SIGNAL(moveMade(QList<Player*>,unsigned int,bool)),this,SLOT(setupedMove(QList<Player*>,unsigned int,bool)));
 }
-void BoardVision::buttons(){
-    listWgt = new QListWidget(baseWidget);
-    DB *db = new DB();
+
+BoardVision::~BoardVision(){
     db->openDB();
-    listWgt->setGeometry(900,590,150,60);
+    db->deleteTable(currTable);
+    db->closeDB();
+}
+
+void BoardVision::buttons(){
+    QLabel *partLabel = new QLabel("Партии:",baseWidget);
+    partLabel->setGeometry(930,570,80,20);
+    listWgt = new QListWidget(baseWidget);
+    db->openDB();
+    listWgt->setGeometry(930,590,100,60);
     listWgt->addItems(db->tableList());
     connect( listWgt, SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(onListClicked(QListWidgetItem*)));
+
+    currTable="Save_"+QString::number(QDate::currentDate().day())+'_'+QString::number(QDate::currentDate().month());
+    if(db->containsTable(currTable))
+    {
+        saveInd++;
+        currTable="Save_"+QString::number(QDate::currentDate().day())+'_'+QString::number(QDate::currentDate().month())+"_"+QString::number(saveInd);
+    }
+    db->createTable(currTable);
+    //qDebug() << db->tableList();
+
     QPushButton *dButton= new QPushButton("Загрузить партию",baseWidget);
     dButton->setGeometry(700,590,150,20);
     connect( dButton, SIGNAL(clicked()),this,SLOT(moveList()));
 
-    QPushButton *backButton= new QPushButton("<",baseWidget);
-    backButton->setGeometry(400,600,50,20);
-    connect( backButton, SIGNAL(clicked()),this,SLOT(backMove()));
+    //QPushButton *backButton= new QPushButton("<",baseWidget);
+    //backButton->setGeometry(400,600,50,20);
+   // connect( backButton, SIGNAL(clicked()),this,SLOT(backMove()));
     QPushButton *nextButton= new QPushButton(">",baseWidget);
     nextButton->setGeometry(550,600,50,20);
     connect( nextButton, SIGNAL(clicked()),this,SLOT(nextMove()));
     QPushButton *clearButton= new QPushButton("Очистить",baseWidget);
-    clearButton->setGeometry(450,600,90,20);
+    clearButton->setGeometry(455,600,90,20);
     connect( clearButton, SIGNAL(clicked()),this,SLOT(clearBoard()));
 
    QPushButton *saButton= new QPushButton("Сохранить партию",baseWidget);
     saButton->setGeometry(700,620,150,20);
-  // QPushButton *seButton= new QPushButton("Искать партию",baseWidget);
-    //seButton->setGeometry(700,650,150,20);
+    connect( saButton, SIGNAL(clicked()),this,SLOT(savedMoves()));
+   QPushButton *seButton= new QPushButton("Удалить партию",baseWidget);
+   seButton->setGeometry(700,650,150,20);
+   connect( seButton, SIGNAL(clicked()),this,SLOT(deletedMoves()));
     db->closeDB();
 }
+
+void BoardVision::savedMoves(){
+   db->openDB();
+    listWgt->addItem(currTable);
+    saveInd++;
+    currTable="Save_"+QString::number(QDate::currentDate().day())+'_'+QString::number(QDate::currentDate().month())+"_"+QString::number(saveInd);
+     db->createTable(currTable);
+   db->closeDB();
+}
+
+void BoardVision::deletedMoves(){
+    listWgt->clear();
+    db->openDB();
+    db->deleteTable(table);
+    QStringList sl =db->tableList();
+    //sl.removeLast();
+    listWgt->addItems(sl);
+    db->closeDB();
+}
+
 void BoardVision::initBoard(){
     for(int i=7;i>=0;i--)
     {
@@ -127,15 +168,15 @@ void BoardVision::initBoard(){
 
 void BoardVision::clearBoard(){
     c->refreshGame();
-    //index=-1;
-    //color->tileColor=0;
-    //movesTable->clear();
-    //initBoard();
+    index=-1;
+    db->openDB();
+    db->deleteTable(currTable);
+    db->createTable(currTable);
+    db->closeDB();
 }
 
 void BoardVision::backMove(){
-    if(index>0){
-        DB *db = new DB();
+    if(index>-1){
         db->openDB();
         QPoint* moves = new QPoint[2];
         index--;
@@ -147,7 +188,6 @@ void BoardVision::backMove(){
 }
 
 void BoardVision::nextMove(){
-    DB *db = new DB();
     db->openDB();
     if(index<db->recordCount(table) && table !=""){
         QPoint* moves = new QPoint[2];
@@ -158,7 +198,16 @@ void BoardVision::nextMove(){
     }
     db->closeDB();
 }
-void BoardVision::setupedMove(QList<Player*> pl,unsigned int play){
+void BoardVision::setupedMove(QList<Player*> pl,unsigned int play, bool k){
+    QLabel *kLabel = new QLabel("Шах!",baseWidget);
+    kLabel->setGeometry(300,20,40,20);
+    QFont font = kLabel->font();
+    font.setPointSize(14);
+    kLabel->setFont(font);
+    if(k)
+       kLabel->show();
+    else
+       kLabel->hide();
     for(int i=7;i>=0;i--)
     {
         for(int j=0;j<8;j++)
@@ -185,7 +234,6 @@ void BoardVision::setupedMove(QList<Player*> pl,unsigned int play){
 
 void BoardVision::tileClicked(QPoint p)
 {
-    //qDebug()<<p.x()-1<<p.y()-1<<tile[p.x()-1][p.y()-1]->row <<tile[p.x()-1][p.y()-1]->col  <<tile[p.x()-1][p.y()-1]->checked;
     fromto <<p;
     if(tile[fromto[0].y()-1][fromto[0].x()-1]->piece){
         tile[fromto[0].y()-1][fromto[0].x()-1]->checked=true;
@@ -195,11 +243,13 @@ void BoardVision::tileClicked(QPoint p)
         count++;
         if(count==2){
             count=1;
-           // qDebug()<<tile[fromto[0].y()-1][fromto[0].x()-1]->piece;
             if(tile[fromto[0].y()-1][fromto[0].x()-1]->piece)
             {
                 tile[p.y()-1][p.x()-1]->checked=true;
                 tile[p.y()-1][p.x()-1]->tileDisplay();
+                db->openDB();
+                db->writeMove(currTable,fromto[0],p);
+                db->closeDB();
                 emit wantMove(fromto[0],p);
                 tile[p.y()-1][p.x()-1]->checked=false;
                 tile[p.y()-1][p.x()-1]->tileDisplay();
@@ -213,7 +263,6 @@ void BoardVision::tileClicked(QPoint p)
 
 void BoardVision::moveList()
 {
-    DB *db = new DB();
     db->openDB();
     //QLabel *moves = new QLabel(baseWidget);
     movesTable = new QTableWidget(db->recordCount(table),2,baseWidget);
