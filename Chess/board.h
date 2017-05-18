@@ -11,6 +11,8 @@ public:
     bool getViewType();
     unsigned getPlayersAmount();
 
+    Board(){}
+    ~Board();
     const QList <Piece*> getPieces();
     const QList <Player* > getPlayers();
     void addPlayer();
@@ -25,7 +27,6 @@ public:
 private:
     QList <Player* > players;
     bool viewType; // false means simple(console) and true means graphic
-    Board(){}
     bool isPlayerIndexCorrect(const int &playerIndex);
     bool isOnBoard(QPoint pos);
     //Factory methods
