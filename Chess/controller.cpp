@@ -25,6 +25,9 @@ void Controller::refreshGame()
 {
      bool prevt = board->getViewType();
      delete board;
+     kings.clear();
+     ElPassantPieces.clear();
+     ElPassantTTLs.clear();
      board = Board::CreateBoard(prevt);
      createWhitePlayer();
      createBlackPlayer();
@@ -191,6 +194,7 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
 {
     if(board!=NULL)
     {
+        QList <Piece*> temp = kings;
         Piece* pieceToMove = board->getPlayerPiece(currPlayerIndex, from);
         if(!pieceToMove->isEmpty()){ // "empty" piece movement block
             decreaseElPassantTTLs();

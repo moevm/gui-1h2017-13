@@ -142,3 +142,10 @@ Piece *Board::createCopy(const QPoint &pos)
     return temp;
 }
 
+Board::~Board()
+{
+    for(int i=0 ;i<players.length(); i++){
+        delete players[i];
+    }
+}
+
