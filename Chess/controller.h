@@ -2,7 +2,6 @@
 #define CONTROLLER_H
 #include "board.h"
 #include <QObject>
-#include <QDebug>
 
 class Controller : public QObject
 {
@@ -27,6 +26,7 @@ private:
     void createBlackPlayer();
     bool isPlayerKingUnderAttack(unsigned int playerIndex, QPoint kingPosition);
     bool isCorrectDirectionPawnMovement(QPoint to, QPoint from, unsigned int playerIndex);
+    bool isPawnReachedEndOfBoard(QPoint pos, unsigned int playerIndex);
     void decreaseElPassantTTLs();
     void increaseElPassantTTLs();
     bool isElPassantPieceMatch(Piece* ptr);

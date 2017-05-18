@@ -209,7 +209,6 @@ void BoardVision::setupedMove(QList<Player*> pl,unsigned int play, bool k){
     font.setPointSize(14);
     kLabel->setFont(font);
     kLabel->show();
-    qDebug() << k;
     if(k)
        kLabel->setText("Шах!");
     else

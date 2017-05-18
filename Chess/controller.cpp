@@ -145,6 +145,14 @@ bool Controller::isCorrectDirectionPawnMovement(QPoint to, QPoint from, unsigned
     }
 }
 
+bool Controller::isPawnReachedEndOfBoard(QPoint pos, unsigned int playerIndex)
+{
+    if((playerIndex == 0 && pos.y() == 8) || (playerIndex == 1 && pos.x() == 1))
+        return true;
+    else
+        return false;
+}
+
 void Controller::decreaseElPassantTTLs()
 {
     for(int i=0 ; i<ElPassantTTLs.length(); i++){
@@ -236,6 +244,7 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
                              {
                                  moveBackTransmission();
                                  board->changePlayerPiecePosition(currPlayerIndex, to, from);
+                                 pieceToMove->setState(pieceToMoveCopy->getState());
                                  if(!pieceToEatCopy->isEmpty())
                                  {
                                      board->addPlayerPiece(pieceToEatCopyPlayerIndex, pieceToEatCopy->getType(), pieceToEatCopy->getPosition(), pieceToEatCopy->getState());
@@ -256,6 +265,11 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
                                      pieceToEatCopy = board->createCopy(QPoint(to.x(), from.y()));
                                      pieceToEatCopyPlayerIndex = board->getPiecePlayerIndex(QPoint(to.x(), from.y()));
                                      ElPassant = true;
+                                     if(pieceToEatCopyPlayerIndex == prevPlayerIndex){
+                                         ElPassant = false;
+                                         pieceToEatCopy = new Empty();
+                                         pieceToEatCopyPlayerIndex = UINT_MAX;
+                                     }
                                  }
                                  int diffIntersectsX = pieceToEatCopy->getPosition().x()  -  to.x();
                                  int diffIntersectsY = pieceToEatCopy->getPosition().y() -  to.y();
@@ -267,21 +281,34 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
                                      {
                                          moveBackTransmission();
                                          board->changePlayerPiecePosition(currPlayerIndex, to, from);
+                                         pieceToMove->setState(pieceToMoveCopy->getState());
                                          if(!pieceToEatCopy->isEmpty())
                                          {
                                              board->addPlayerPiece(pieceToEatCopyPlayerIndex, pieceToEatCopy->getType(), pieceToEatCopy->getPosition(), pieceToEatCopy->getState());
                                          }
                                      }
-                                 } else{ // добавить проверку того, что вражеская пешка походила впервые!!!!!11!!
-                                     if(ElPassant && isElPassantPieceMatch(pieceToEatCopy)){
-                                         board->deletePlayerPiece(pieceToEatCopyPlayerIndex, QPoint(to.x(), from.y()));
+                                 } else{
+                                     if(ElPassant){
+                                         if(isElPassantPieceMatch(pieceToEatCopy)){
+                                             board->deletePlayerPiece(pieceToEatCopyPlayerIndex, QPoint(to.x(), from.y()));
+                                         }else{
+                                             moveBackTransmission();
+                                             board->changePlayerPiecePosition(currPlayerIndex, to, from);
+                                             pieceToMove->setState(pieceToMoveCopy->getState());
+                                             if(!pieceToEatCopy->isEmpty())
+                                             {
+                                                 board->addPlayerPiece(pieceToEatCopyPlayerIndex, pieceToEatCopy->getType(), pieceToEatCopy->getPosition(), pieceToEatCopy->getState());
+                                             }
+                                         }
                                      }
+
                                  }
                         }
                         else
                         {
                             moveBackTransmission();
                             board->changePlayerPiecePosition(currPlayerIndex, to, from);
+                            pieceToMove->setState(pieceToMoveCopy->getState());
                             if(!pieceToEatCopy->isEmpty())
                             {
                                 board->addPlayerPiece(pieceToEatCopyPlayerIndex, pieceToEatCopy->getType(), pieceToEatCopy->getPosition(), pieceToEatCopy->getState());
@@ -297,6 +324,7 @@ void Controller::makeMove(const QPoint &from, const QPoint& to)
                 if(isPlayerKingUnderAttack(prevPlayerIndex, kingPosition)){ //check condition
                     moveBackTransmission();
                     board->changePlayerPiecePosition(currPlayerIndex, to, from);
+                    pieceToMove->setState(pieceToMoveCopy->getState());
                     if(!pieceToEatCopy->isEmpty())
                     {
                         board->addPlayerPiece(pieceToEatCopyPlayerIndex, pieceToEatCopy->getType(), pieceToEatCopy->getPosition(), pieceToEatCopy->getState());
