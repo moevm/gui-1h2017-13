@@ -65,7 +65,7 @@ void BoardVision::buttons(){
     listWgt = new QListWidget(baseWidget);
     db->openDB();
     listWgt->setGeometry(930,590,100,60);
-    listWgt->addItems(db->tableList());
+    listWgt->addItems(db->deleteList());
     connect( listWgt, SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(onListClicked(QListWidgetItem*)));
 
     currTable="Save_"+QString::number(QDate::currentDate().day())+'_'+QString::number(QDate::currentDate().month());
@@ -116,9 +116,8 @@ void BoardVision::deletedMoves(){
     listWgt->clear();
     db->openDB();
     db->deleteTable(table);
-    QStringList sl =db->tableList();
-    //sl.removeLast();
-    listWgt->addItems(sl);
+
+    listWgt->addItems(db->deleteList());
     db->closeDB();
 }
 
@@ -199,6 +198,7 @@ void BoardVision::nextMove(){
     index++;
     moves=db->readMove(table,index);
     movesTable->selectRow(index);
+    db->writeMove(currTable,moves[0],moves[1]);
     emit wantMove(moves[0],moves[1]);
     }
     db->closeDB();
@@ -209,6 +209,7 @@ void BoardVision::setupedMove(QList<Player*> pl,unsigned int play, bool k){
     font.setPointSize(14);
     kLabel->setFont(font);
     kLabel->show();
+    qDebug() << k;
     if(k)
        kLabel->setText("Шах!");
     else

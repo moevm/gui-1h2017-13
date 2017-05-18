@@ -14,7 +14,9 @@ public:
     DB()
     {
         //db= QSqlDatabase::addDatabase("QSQLITE");
-        db.setDatabaseName("C:/Users/Niktesla/Desktop/Projects/gui-1h2017-13.git/Chess/chess.db");
+        //db.setDatabaseName("C:/Users/Niktesla/Desktop/Projects/gui-1h2017-13.git/Chess/chess.db");
+        //db= QSqlDatabase::addDatabase("QSQLITE");
+        db.setDatabaseName(QDir::currentPath()+"/chess.db");
     }
     ~DB(){
 
@@ -83,6 +85,14 @@ public:
         //qDebug() << db.tables();
         return db.tables().contains(name);
     }
+    QStringList deleteList(){
+     QStringList  sl=  db.tables();
+        foreach (QString s, sl) {
+            if(recordCount(s)<=0)
+               bool b=sl.removeOne(s);
+        }
+        return sl;
+    }
 
     int recordCount(const QString &name)
     {
@@ -147,7 +157,7 @@ public:
     QStringList readMovesS(const QString &name)
     {
         QPoint* moves = new QPoint[2];
-        QString s="";  
+        QString s="";
         QStringList sl;
         for(int i=0; i<recordCount(name); i++)
         {
