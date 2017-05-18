@@ -23,15 +23,16 @@ void Controller::initializeGame(bool viewType)
 
 void Controller::refreshGame()
 {
-     bool prevt = board->getViewType();
-     delete board;
-     kings.clear();
-     ElPassantPieces.clear();
-     ElPassantTTLs.clear();
-     board = Board::CreateBoard(prevt);
-     createWhitePlayer();
-     createBlackPlayer();
-     currPlayerIndex = 0;
+    bool prevt = board->getViewType();
+    delete board;
+    kings.clear();
+    ElPassantPieces.clear();
+    ElPassantTTLs.clear();
+    initializeGame(prevt);
+    /*board = Board::CreateBoard(prevt);
+    createWhitePlayer();
+    createBlackPlayer();
+    currPlayerIndex = 0;*/
      emit moveMade(board->getPlayers(), currPlayerIndex, false);
 }
 
