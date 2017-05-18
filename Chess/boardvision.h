@@ -10,13 +10,18 @@
 class BoardVision : public QObject
 {
     Q_OBJECT 
-    int count=0,turn=1,max=0;
+    int count=1,index=-1, saveInd=0;
     QVector<QPoint> fromto;
-    Tile *click1;
-
     Tile *tile[8][8] = { { NULL } };
-    QString table="";
+    Tile *color;
+    QString table="", currTable="";
     QWidget *baseWidget;
+    QListWidget *listWgt;
+    QTableWidget *movesTable;
+    Controller *c;
+    DB *db = new DB();
+    QLabel *kLabel;
+    //unsigned int player;
 public:
     class Border
     {
@@ -36,14 +41,21 @@ public:
         }
     };
     BoardVision(QWidget *widget);
+    ~BoardVision();
     void buttons();
+    void initBoard();
     signals:
     void wantMove(QPoint from,QPoint to);
 private slots:
     void onListClicked(QListWidgetItem* item );
     void moveList();
     void tileClicked(QPoint p);
-    void setupedMove(QList<Player*> pl);
+    void setupedMove(QList<Player*> pl,unsigned int play,bool k);
+    void backMove();
+    void nextMove();
+    void clearBoard();
+    void savedMoves();
+    void deletedMoves();
 };
 
 #endif // BOARDVISION_H
