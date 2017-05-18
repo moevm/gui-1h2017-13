@@ -28,10 +28,11 @@ void Controller::refreshGame()
      kings.clear();
      ElPassantPieces.clear();
      ElPassantTTLs.clear();
-     board = Board::CreateBoard(prevt);
+     initializeGame(prevt);
+     /*board = Board::CreateBoard(prevt);
      createWhitePlayer();
      createBlackPlayer();
-     currPlayerIndex = 0;
+     currPlayerIndex = 0;*/
      emit moveMade(board->getPlayers(), currPlayerIndex, false);
 }
 
